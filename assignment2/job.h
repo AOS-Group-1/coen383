@@ -1,6 +1,8 @@
 #ifndef ASSIGNMENT2_JOB_H
 #define ASSIGNMENT2_JOB_H
 
+typedef struct Process process;
+
 struct Process {
 	int    id;
 	double arrival_time;
@@ -12,8 +14,15 @@ struct Process {
 	double response_time;
 };
 
-struct Process *generateJob();
+process *generateJob(int arrival_time);
 
-struct Process **generateJobs(int count);
+typedef struct Simulation simulation;
+
+struct Simulation {
+	process **jobs;
+	int     totalJobs;
+};
+
+simulation *generateJobs(int count);
 
 #endif //ASSIGNMENT2_JOB_H

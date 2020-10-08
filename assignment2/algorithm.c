@@ -1,6 +1,6 @@
 #include "algorithm.h"
 
-int basicAlgorithm(int time, struct Process *job) {
+int basicAlgorithm(int time, process *job) {
 	if (job)
 		return job->id;
 	else

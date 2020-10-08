@@ -1,15 +1,16 @@
 #include <stdlib.h>
 #include "run.h"
 
-int *runAlgorithm(struct Process **queue, int totalJobs, int quanta, int (*scheduleJob)(int, struct Process *)) {
-	int *run       = malloc(sizeof(int) * (quanta + 50));
+int *runAlgorithm(simulation *queue, int quanta, int (*scheduleJob)(int, process *)) {
+	int *run       = malloc(sizeof(int) * (quanta));
 	int currentJob = 0;
 	
-	for (int time = 0; time < quanta + 50; ++time) {
-		if (currentJob < totalJobs && queue[currentJob]->arrival_time < time) {
-			while ((currentJob < totalJobs && queue[currentJob]->arrival_time < time)) {
-				run[time] = scheduleJob(time, queue[currentJob]);
-				currentJob++;
+	for (int time = 0; time < quanta; ++time) {
+		process *job = queue->jobs[currentJob];
+		if (currentJob < queue->totalJobs && job->arrival_time < time) {
+			while ((currentJob < queue->totalJobs && job->arrival_time < time)) {
+				run[time] = scheduleJob(time, job);
+				job = queue->jobs[++currentJob];
 			}
 		} else {
 			run[time] = scheduleJob(time, NULL);
@@ -20,20 +21,22 @@ int *runAlgorithm(struct Process **queue, int totalJobs, int quanta, int (*sched
 	return run;
 }
 
-void calculateData(struct Process **jobs, int totalJobs, const int *run, int quanta) {
+void calculateData(simulation *queue, const int *run, int quanta) {
 	for (int i = 0; i < quanta; ++i) {
+		process *job = queue->jobs[run[i]];
 		if (run[i] != '-') {
-			if (!jobs[run[i]]->response_time) {
-				jobs[run[i]]->response_time   = i;
-				jobs[run[i]]->turnaround_time = i + jobs[run[i]]->service_time;
+			if (!job->response_time) {
+				job->response_time   = i;
+				job->turnaround_time = i + job->service_time;
 			} else {
-				jobs[run[i]]->turnaround_time = i;
+				job->turnaround_time = i;
 			}
 		}
 	}
-	for (int i = 0; i < totalJobs; ++i) {
-		jobs[i]->waiting_time = jobs[i]->response_time - jobs[i]->turnaround_time;
-		jobs[i]->turnaround_time -= jobs[i]->arrival_time;
-		jobs[i]->response_time -= jobs[i]->arrival_time;
+	for (int i = 0; i < queue->totalJobs; ++i) {
+		process *job      = queue->jobs[i];
+		job->waiting_time = job->response_time - job->turnaround_time;
+		job->turnaround_time -= job->arrival_time;
+		job->response_time -= job->arrival_time;
 	}
 }

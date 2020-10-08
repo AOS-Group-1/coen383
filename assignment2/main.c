@@ -8,23 +8,29 @@ int main() {
 	int seed = time(NULL);
 //	srand(seed); // guarantee consistency when debugging
 	
-	int totalJobs = 10;
+	int totalJobs = 20;
 	
-	struct Process **queue = generateJobs(totalJobs);
+	simulation *queue = generateJobs(totalJobs);
 	
-	for (int i = 0; i < totalJobs; ++i)
-		printf("%.1f, %.1f, %i\n", queue[i]->arrival_time, queue[i]->service_time, queue[i]->priority);
+	for (int i = 0; i < queue->totalJobs; ++i) {
+		process *job = queue->jobs[i];
+//		printf("%.1f, %.1f, %i\n", job->arrival_time, job->service_time, job->priority);
+		printf("%0*d%*c%0*d\n", (int) job->arrival_time, 0,
+		       (int) job->service_time, ' ',
+		       (int) (110 - job->arrival_time - job->service_time), 0);
+	}
 	
 	int quanta = 150;
-	int *run   = runAlgorithm(queue, totalJobs, quanta, basicAlgorithm);
+	int *run   = runAlgorithm(queue, quanta, basicAlgorithm);
 	
 	for (int i = 0; i < quanta; ++i)
 		printf("%c", run[i]);
 	printf("\n");
-
-//	calculateData(queue, totalJobs, run, quanta);
-//
-//	for (int i = 0; i < totalJobs; ++i)
-//		printf("%.1f, %.1f, %.1f\n", queue[i]->turnaround_time, queue[i]->waiting_time, queue[i]->response_time);
+	
+	calculateData(queue, run, quanta);
+	
+	for (int i = 0; i < queue->totalJobs; ++i)
+		printf("%.1f, %.1f, %.1f\n", queue->jobs[i]->turnaround_time, queue->jobs[i]->waiting_time,
+		       queue->jobs[i]->response_time);
 	
 }

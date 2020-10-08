@@ -10,6 +10,6 @@
  * @param job null if no job arrived
  * @return job id that is decided on to schedule, -1 if none decided
  */
-int basicAlgorithm(int time, struct Process *job);
+int basicAlgorithm(int time, process *job);
 
 #endif //ASSIGNMENT2_ALGORITHM_H
