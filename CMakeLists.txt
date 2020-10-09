@@ -14,3 +14,4 @@ add_executable(assignment2
         assignment2/run.c
         assignment2/algorithm.h
         assignment2/algorithm.c)
+target_link_libraries(assignment2 m)
