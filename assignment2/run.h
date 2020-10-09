@@ -3,8 +3,8 @@
 
 #include "job.h"
 
-int *runAlgorithm(simulation *queue, int quanta, int (*scheduleJob)(int, process *));
+int *runAlgorithm(simulation *sim, int quanta, int (*scheduleJob)(simulation *, int, process *));
 
-void calculateData(simulation *queue, const int *run, int quanta);
+void calculateData(simulation *sim, const int *run, int quanta);
 
 #endif //ASSIGNMENT2_RUN_H

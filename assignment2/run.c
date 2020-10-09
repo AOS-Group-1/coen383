@@ -1,19 +1,19 @@
 #include <stdlib.h>
 #include "run.h"
 
-int *runAlgorithm(simulation *queue, int quanta, int (*scheduleJob)(int, process *)) {
+int *runAlgorithm(simulation *sim, int quanta, int (*scheduleJob)(simulation *, int, process *)) {
 	int *run       = malloc(sizeof(int) * (quanta));
 	int currentJob = 0;
 	
 	for (int time = 0; time < quanta; ++time) {
-		process *job = queue->jobs[currentJob];
-		if (currentJob < queue->totalJobs && job->arrival_time < time) {
-			while ((currentJob < queue->totalJobs && job->arrival_time < time)) {
-				run[time] = scheduleJob(time, job);
-				job = queue->jobs[++currentJob];
+		process *job = sim->jobs[currentJob];
+		if (currentJob < sim->totalJobs && job->arrival_time <= time) {
+			while ((currentJob < sim->totalJobs && job->arrival_time <= time)) {
+				run[time] = scheduleJob(sim, time, job);
+				job = sim->jobs[++currentJob];
 			}
 		} else {
-			run[time] = scheduleJob(time, NULL);
+			run[time] = scheduleJob(sim, time, NULL);
 		}
 		if (run[time] == -1) run[time] = '-';
 	}
@@ -21,9 +21,9 @@ int *runAlgorithm(simulation *queue, int quanta, int (*scheduleJob)(int, process
 	return run;
 }
 
-void calculateData(simulation *queue, const int *run, int quanta) {
+void calculateData(simulation *sim, const int *run, int quanta) {
 	for (int i = 0; i < quanta; ++i) {
-		process *job = queue->jobs[run[i]];
+		process *job = sim->jobs[run[i]];
 		if (run[i] != '-') {
 			if (!job->response_time) {
 				job->response_time   = i;
@@ -33,8 +33,8 @@ void calculateData(simulation *queue, const int *run, int quanta) {
 			}
 		}
 	}
-	for (int i = 0; i < queue->totalJobs; ++i) {
-		process *job      = queue->jobs[i];
+	for (int i = 0; i < sim->totalJobs; ++i) {
+		process *job      = sim->jobs[i];
 		job->waiting_time = job->response_time - job->turnaround_time;
 		job->turnaround_time -= job->arrival_time;
 		job->response_time -= job->arrival_time;

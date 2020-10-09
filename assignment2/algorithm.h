@@ -4,12 +4,14 @@
 #include "job.h"
 
 /**
- * Adds a job to the schedule.
+ * Runs the algorithm on the time slice.
+ * Will be called for each time slice and start of each job.
+ * If multiple jobs start at the same time slice, will be called twice for that time slice.
  *
  * @param time
- * @param job null if no job arrived
- * @return job id that is decided on to schedule, -1 if none decided
+ * @param job - null if no job arrived
+ * @return job id that is decided on to be ran, -1 if none decided
  */
-int basicAlgorithm(int time, process *job);
+int FCFS_Algorithm(simulation *sim, int time, process *job);
 
 #endif //ASSIGNMENT2_ALGORITHM_H
