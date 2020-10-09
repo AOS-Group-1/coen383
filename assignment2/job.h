@@ -26,4 +26,6 @@ struct Simulation {
 
 simulation *generateJobs(int count);
 
+void resetJobStats(simulation *sim);
+
 #endif //ASSIGNMENT2_JOB_H

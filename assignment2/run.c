@@ -24,8 +24,8 @@ int *runAlgorithm(simulation *sim, int quanta,
 
 void calculateData(simulation *sim, const int *run, int quanta) {
 	for (int i = 0; i < quanta; ++i) {
-		process *job = sim->jobs[run[i]];
 		if (run[i] != '-') {
+			process *job = sim->jobs[run[i] - 'A'];
 			if (!job->response_time) {
 				job->response_time   = i;
 				job->turnaround_time = i + job->service_time;
@@ -34,9 +34,10 @@ void calculateData(simulation *sim, const int *run, int quanta) {
 			}
 		}
 	}
+	
 	for (int i = 0; i < sim->totalJobs; ++i) {
-		process *job      = sim->jobs[i];
-		job->waiting_time = job->response_time - job->turnaround_time;
+		process *job = sim->jobs[i];
+		job->waiting_time = job->turnaround_time - job->response_time;
 		job->turnaround_time -= job->arrival_time;
 		job->response_time -= job->arrival_time;
 	}

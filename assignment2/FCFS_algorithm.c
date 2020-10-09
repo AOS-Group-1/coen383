@@ -36,7 +36,7 @@ int FCFS_Algorithm(int quanta) {
 	if (currentJob && currentJob->end_time < quanta) currentJob = NULL;
 	if (!currentJob) {
 		currentJob = pop();
-		if (currentJob) currentJob->end_time = quanta + currentJob->service_time - 1;
+		if (currentJob) currentJob->end_time = quanta + fmax(currentJob->service_time - 1, 0);
 	}
 	if (!currentJob) return -1;
 	

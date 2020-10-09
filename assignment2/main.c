@@ -11,13 +11,14 @@ int main() {
 	int totalJobs = 10;
 	
 	simulation *sim = generateJobs(totalJobs);
+	resetJobStats(sim);
 	
 	for (int i = 0; i < sim->totalJobs; ++i) {
 		process *job = sim->jobs[i];
-		printf("%.1f, %.1f, %i\n", job->arrival_time, job->service_time, job->priority);
-//		printf("%0*d%*c%0*d\n", (int) job->arrival_time, 0,
-//		       (int) job->service_time, ' ',
-//		       (int) (110 - job->arrival_time - job->service_time), 0);
+//		printf("%.1f, %.1f, %i\n", job->arrival_time, job->service_time, job->priority);
+		printf("%0*d%*c%0*d\n", (int) job->arrival_time, 0,
+		       (int) job->service_time, ' ',
+		       (int) (110 - job->arrival_time - job->service_time), 0);
 	}
 	
 	int quanta = 200;
@@ -30,7 +31,9 @@ int main() {
 	calculateData(sim, run, quanta);
 	
 	for (int i = 0; i < sim->totalJobs; ++i)
-		printf("%.1f, %.1f, %.1f\n", sim->jobs[i]->turnaround_time, sim->jobs[i]->waiting_time,
-		       sim->jobs[i]->response_time);
-	
+		printf("%.1f, %.1f, %.1f\n",
+		       sim->jobs[i]->response_time,
+		       sim->jobs[i]->waiting_time,
+		       sim->jobs[i]->turnaround_time);
+	printf("\n");
 }
