@@ -1,7 +1,9 @@
 #include <stdlib.h>
 #include "run.h"
 
-int *runAlgorithm(simulation *sim, int quanta, int (*scheduleJob)(simulation *, int, process *)) {
+int *runAlgorithm(simulation *sim, int quanta,
+                  void (*scheduleJobAdd)(simulation *, process *, int),
+                  int (*scheduleJob)(simulation *, int)) {
 	int *run       = malloc(sizeof(int) * (quanta));
 	int currentJob = 0;
 	
@@ -9,12 +11,11 @@ int *runAlgorithm(simulation *sim, int quanta, int (*scheduleJob)(simulation *, 
 		process *job = sim->jobs[currentJob];
 		if (currentJob < sim->totalJobs && job->arrival_time <= time) {
 			while ((currentJob < sim->totalJobs && job->arrival_time <= time)) {
-				run[time] = scheduleJob(sim, time, job);
+				scheduleJobAdd(sim, job, time);
 				job = sim->jobs[++currentJob];
 			}
-		} else {
-			run[time] = scheduleJob(sim, time, NULL);
 		}
+		run[time] = scheduleJob(sim, time);
 		if (run[time] == -1) run[time] = '-';
 	}
 	

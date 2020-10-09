@@ -4,14 +4,21 @@
 #include "job.h"
 
 /**
- * Runs the algorithm on the time slice.
- * Will be called for each time slice and start of each job.
- * If multiple jobs start at the same time slice, will be called twice for that time slice.
+ * Signals when a job has arrived.
  *
- * @param time
- * @param job - null if no job arrived
+ * @param sim
+ * @param job
+ * @param quanta - quanta job is added in
+ */
+void FCFS_Algorithm_Add(simulation *sim, process *job, int quanta);
+
+/**
+ * Runs the algorithm, called for each quanta.
+ *
+ * @param sim
+ * @param quanta
  * @return job id that is decided on to be ran, -1 if none decided
  */
-int FCFS_Algorithm(simulation *sim, int time, process *job);
+int FCFS_Algorithm(simulation *sim, int quanta);
 
 #endif //ASSIGNMENT2_ALGORITHM_H

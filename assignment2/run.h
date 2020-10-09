@@ -3,7 +3,9 @@
 
 #include "job.h"
 
-int *runAlgorithm(simulation *sim, int quanta, int (*scheduleJob)(simulation *, int, process *));
+int *runAlgorithm(simulation *sim, int quanta,
+                  void (*scheduleJobAdd)(simulation *, process *, int),
+                  int (*scheduleJob)(simulation *, int));
 
 void calculateData(simulation *sim, const int *run, int quanta);
 

@@ -23,19 +23,20 @@ process *pop() {
 process *currentJob = NULL;
 double  currentJobEnd;
 
-int FCFS_Algorithm(simulation *sim, int time, process *job) {
-	if (job) {
-		if (currentJob)
-			push(job);
-		else {
-			currentJob    = job;
-			currentJobEnd = time + currentJob->service_time;
-		}
+void FCFS_Algorithm_Add(simulation *sim, process *job, int quanta) {
+	if (currentJob)
+		push(job);
+	else {
+		currentJob    = job;
+		currentJobEnd = quanta + currentJob->service_time;
 	}
-	if (currentJob && currentJobEnd < time) currentJob = NULL;
+}
+
+int FCFS_Algorithm(simulation *sim, int quanta) {
+	if (currentJob && currentJobEnd < quanta) currentJob = NULL;
 	if (!currentJob) {
 		currentJob = pop();
-		if (currentJob) currentJobEnd = time + currentJob->service_time - 1;
+		if (currentJob) currentJobEnd = quanta + currentJob->service_time - 1;
 	}
 	if (!currentJob) return -1;
 	

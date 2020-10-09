@@ -21,7 +21,7 @@ int main() {
 	}
 	
 	int quanta = 200;
-	int *run   = runAlgorithm(sim, quanta, FCFS_Algorithm);
+	int *run   = runAlgorithm(sim, quanta, FCFS_Algorithm_Add, FCFS_Algorithm);
 	
 	for (int i = 0; i < quanta; ++i)
 		printf("%c", run[i]);
