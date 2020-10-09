@@ -8,6 +8,7 @@ struct Process {
 	double arrival_time;
 	double service_time;
 	int    priority;
+	double end_time;
 	
 	double turnaround_time;
 	double waiting_time;

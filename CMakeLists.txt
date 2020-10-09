@@ -12,6 +12,6 @@ add_executable(assignment2
         assignment2/job.c
         assignment2/run.h
         assignment2/run.c
-        assignment2/algorithm.h
-        assignment2/algorithm.c)
+        assignment2/FCFS_algorithm.h
+        assignment2/FCFS_algorithm.c)
 target_link_libraries(assignment2 m)

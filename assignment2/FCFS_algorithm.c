@@ -1,5 +1,6 @@
-#include "algorithm.h"
+#include "FCFS_algorithm.h"
 #include <stdio.h>
+#include <math.h>
 
 #define QUEUELEN 50
 
@@ -21,22 +22,21 @@ process *pop() {
 }
 
 process *currentJob = NULL;
-double  currentJobEnd;
 
-void FCFS_Algorithm_Add(simulation *sim, process *job, int quanta) {
+void FCFS_Algorithm_Add(process *job, int quanta) {
 	if (currentJob)
 		push(job);
 	else {
-		currentJob    = job;
-		currentJobEnd = quanta + currentJob->service_time;
+		currentJob = job;
+		currentJob->end_time = quanta + fmax(currentJob->service_time - 1, 0);
 	}
 }
 
-int FCFS_Algorithm(simulation *sim, int quanta) {
-	if (currentJob && currentJobEnd < quanta) currentJob = NULL;
+int FCFS_Algorithm(int quanta) {
+	if (currentJob && currentJob->end_time < quanta) currentJob = NULL;
 	if (!currentJob) {
 		currentJob = pop();
-		if (currentJob) currentJobEnd = quanta + currentJob->service_time - 1;
+		if (currentJob) currentJob->end_time = quanta + currentJob->service_time - 1;
 	}
 	if (!currentJob) return -1;
 	

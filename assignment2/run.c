@@ -2,8 +2,8 @@
 #include "run.h"
 
 int *runAlgorithm(simulation *sim, int quanta,
-                  void (*scheduleJobAdd)(simulation *, process *, int),
-                  int (*scheduleJob)(simulation *, int)) {
+                  void (*scheduleJobAdd)(process *, int),
+                  int (*scheduleJob)(int)) {
 	int *run       = malloc(sizeof(int) * (quanta));
 	int currentJob = 0;
 	
@@ -11,11 +11,11 @@ int *runAlgorithm(simulation *sim, int quanta,
 		process *job = sim->jobs[currentJob];
 		if (currentJob < sim->totalJobs && job->arrival_time <= time) {
 			while ((currentJob < sim->totalJobs && job->arrival_time <= time)) {
-				scheduleJobAdd(sim, job, time);
+				scheduleJobAdd(job, time);
 				job = sim->jobs[++currentJob];
 			}
 		}
-		run[time] = scheduleJob(sim, time);
+		run[time] = scheduleJob(time);
 		if (run[time] == -1) run[time] = '-';
 	}
 	
