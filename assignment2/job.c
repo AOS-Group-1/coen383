@@ -1,5 +1,4 @@
 #include <stdlib.h>
-#include <math.h>
 #include "job.h"
 
 process *generateJob(int arrival_time) {
@@ -18,6 +17,10 @@ int processComparator(const void *v1, const void *v2) {
 	const process *p1 = *(process **) v1;
 	const process *p2 = *(process **) v2;
 	return (int) (p1->arrival_time - p2->arrival_time);
+}
+
+double fmax(double x, double y) {
+	return x > y ? x : y;
 }
 
 simulation *generateJobs(int count) {

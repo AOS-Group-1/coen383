@@ -20,7 +20,7 @@ int main() {
 		       (int) (110 - job->arrival_time - job->service_time), 0);
 	}
 	
-	int quanta = 150;
+	int quanta = 200;
 	int *run   = runAlgorithm(queue, quanta, basicAlgorithm);
 	
 	for (int i = 0; i < quanta; ++i)
