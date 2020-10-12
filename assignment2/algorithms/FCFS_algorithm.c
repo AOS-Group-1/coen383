@@ -4,41 +4,41 @@
 
 #define QUEUELEN 50
 
-process *queue[QUEUELEN];
-int     start = 0,
-        end   = 0;
+process *FCFSqueue[QUEUELEN];
+int     SRTstart = 0,
+        SRTend   = 0;
 
-void push(process *job) {
-	queue[end] = job;
-	end = (end + 1) % QUEUELEN;
+void FCFSpush(process *job) {
+	FCFSqueue[SRTend] = job;
+	SRTend = (SRTend + 1) % QUEUELEN;
 }
 
-process *pop() {
-	if (start == end) return NULL;
+process *FCFSpop() {
+	if (SRTstart == SRTend) return NULL;
 	
-	process *ret = queue[start];
-	start = (start + 1) % QUEUELEN;
+	process *ret = FCFSqueue[SRTstart];
+	SRTstart = (SRTstart + 1) % QUEUELEN;
 	return ret;
 }
 
-process *currentJob = NULL;
+process *FCFScurrentJob = NULL;
 
 void FCFS_Algorithm_Add(process *job, int quanta) {
-	if (currentJob)
-		push(job);
+	if (FCFScurrentJob)
+		FCFSpush(job);
 	else {
-		currentJob = job;
-		currentJob->end_time = quanta + fmax(currentJob->service_time - 1, 0);
+		FCFScurrentJob = job;
+		FCFScurrentJob->end_time = quanta + fmax(FCFScurrentJob->service_time - 1, 0);
 	}
 }
 
 int FCFS_Algorithm(int quanta) {
-	if (currentJob && currentJob->end_time < quanta) currentJob = NULL;
-	if (!currentJob) {
-		currentJob = pop();
-		if (currentJob) currentJob->end_time = quanta + fmax(currentJob->service_time - 1, 0);
+	if (FCFScurrentJob && FCFScurrentJob->end_time < quanta) FCFScurrentJob = NULL;
+	if (!FCFScurrentJob) {
+		FCFScurrentJob = FCFSpop();
+		if (FCFScurrentJob) FCFScurrentJob->end_time = quanta + fmax(FCFScurrentJob->service_time - 1, 0);
 	}
-	if (!currentJob) return -1;
+	if (!FCFScurrentJob) return -1;
 	
-	return currentJob->id;
+	return FCFScurrentJob->id;
 }
