@@ -9,7 +9,7 @@ int *runAlgorithm(simulation *sim, int quanta,
 	
 	for (int time = 0; time < quanta; ++time) {
 		process *job = sim->jobs[currentJob];
-		if (currentJob < sim->totalJobs && job->arrival_time <= time) {
+		if (time < 100 && currentJob < sim->totalJobs && job->arrival_time <= time) {
 			while ((currentJob < sim->totalJobs && job->arrival_time <= time)) {
 				scheduleJobAdd(job, time);
 				job = sim->jobs[++currentJob];

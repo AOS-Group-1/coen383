@@ -12,6 +12,16 @@ add_executable(assignment2
         assignment2/job.c
         assignment2/run.h
         assignment2/run.c
-        assignment2/FCFS_algorithm.h
-        assignment2/FCFS_algorithm.c)
+        assignment2/algorithms/FCFS_algorithm.h
+        assignment2/algorithms/FCFS_algorithm.c
+        assignment2/algorithms/SJF_algorithm.h
+        assignment2/algorithms/SJF_algorithm.c
+        assignment2/algorithms/SRT_algorithm.h
+        assignment2/algorithms/SRT_algorithm.c
+        assignment2/algorithms/RR_algorithm.h
+        assignment2/algorithms/RR_algorithm.c
+        assignment2/algorithms/HPF_NP_algorithm.h
+        assignment2/algorithms/HPF_NP_algorithm.c
+        assignment2/algorithms/HPF_P_algorithm.h
+        assignment2/algorithms/HPF_P_algorithm.c)
 target_link_libraries(assignment2 m)
