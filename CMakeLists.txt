@@ -18,10 +18,13 @@ add_executable(assignment2
         assignment2/algorithms/SJF_algorithm.c
         assignment2/algorithms/SRT_algorithm.h
         assignment2/algorithms/SRT_algorithm.c
+        assignment2/algorithms/priority_queue.h
+        assignment2/algorithms/priority_queue.c
         assignment2/algorithms/RR_algorithm.h
         assignment2/algorithms/RR_algorithm.c
         assignment2/algorithms/HPF_NP_algorithm.h
         assignment2/algorithms/HPF_NP_algorithm.c
+        assignment2/algorithms/HPF_P_algorithm.c
         assignment2/algorithms/HPF_P_algorithm.h
         assignment2/algorithms/HPF_P_algorithm.c)
 target_link_libraries(assignment2 m)
