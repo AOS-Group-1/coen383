@@ -44,21 +44,22 @@ static process *pop(int quanta) {
 static process *currentJob = NULL;
 
 void SRT_Algorithm_Add(process *job, int quanta) {
+	job->remaining_time = job->service_time;
 	if (currentJob)
-		if(currentJob->end_time <= (job->service_time - 1 + quanta)) {
+		if(currentJob->end_time <= (job->remaining_time - 1 + quanta)) {
 			push(job, quanta);		
 		}
 		else {
 			process *tempJob = currentJob;
 			currentJob = job;
-			currentJob->end_time = quanta + fmax(currentJob->service_time - 1, 0);
-			tempJob->service_time = tempJob->end_time - quanta;
+			currentJob->end_time = quanta + fmax(currentJob->remaining_time - 1, 0);
+			tempJob->remaining_time = tempJob->end_time - quanta;
 			tempJob->end_time = 0;
 			push(tempJob, quanta);
 		}
 	else {
 		currentJob = job;
-		currentJob->end_time = quanta + fmax(currentJob->service_time - 1, 0);
+		currentJob->end_time = quanta + fmax(currentJob->remaining_time - 1, 0);
 	}
 }
 
@@ -66,7 +67,7 @@ int SRT_Algorithm(int quanta) {
 	if (currentJob && currentJob->end_time < quanta) currentJob = NULL;
 	if (!currentJob) {
 		currentJob = pop(quanta);
-		if (currentJob) currentJob->end_time = quanta + fmax(currentJob->service_time - 1, 0);
+		if (currentJob) currentJob->end_time = quanta + fmax(currentJob->remaining_time - 1, 0);
 	}
 	if (!currentJob) return -1;
 	
