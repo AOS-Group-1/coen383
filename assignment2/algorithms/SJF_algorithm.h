@@ -3,6 +3,9 @@
 
 #include "../job.h"
 
+#include "priority_queue.h"
+
+
 /**
  * Called when a new job arrives at specific quanta.
  *
