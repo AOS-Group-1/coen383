@@ -28,24 +28,31 @@ void run(simulation *sim,
 	       average_waiting_time    = 0,
 	       average_turnaround_time = 0;
 	
+	int totalJobs = 0;
+	
 	for (int i = 0; i < sim->totalJobs; ++i) {
 		process *job = sim->jobs[i];
-		printf("%c: %.1f, %.1f, %.1f\n",
-		       job->id,
-		       job->response_time,
-		       job->waiting_time,
-		       job->turnaround_time);
-		average_response_time += job->response_time;
-		average_waiting_time += job->waiting_time;
-		average_turnaround_time += job->turnaround_time;
+		if (job->waiting_time != 0) {
+			totalJobs++;
+			printf("%c: %.1f, %.1f, %.1f\n",
+			       job->id,
+			       job->response_time,
+			       job->waiting_time,
+			       job->turnaround_time);
+			average_response_time += job->response_time;
+			average_waiting_time += job->waiting_time;
+			average_turnaround_time += job->turnaround_time;
+		}
 	}
-	average_response_time /= sim->totalJobs;
-	average_waiting_time /= sim->totalJobs;
-	average_turnaround_time /= sim->totalJobs;
-	printf("average: %.1f, %.1f, %.1f\n",
-	       average_response_time,
-	       average_waiting_time,
-	       average_turnaround_time);
+	if (totalJobs) {
+		average_response_time /= totalJobs;
+		average_waiting_time /= totalJobs;
+		average_turnaround_time /= totalJobs;
+		printf("average: %.1f, %.1f, %.1f\n",
+		       average_response_time,
+		       average_waiting_time,
+		       average_turnaround_time);
+	}
 }
 
 int main() {
