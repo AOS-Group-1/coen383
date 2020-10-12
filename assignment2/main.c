@@ -24,11 +24,12 @@ void run(simulation *sim,
 	
 	calculateData(sim, run, quanta);
 	
-	double average_response_time   = 0,
-	       average_waiting_time    = 0,
-	       average_turnaround_time = 0;
+	double totalResponseTime   = 0,
+	       totalWaitingTime    = 0,
+	       totalTurnaroundTime = 0;
 	
-	int totalJobs = 0;
+	int    totalJobs = 0;
+	double finalTime = 0;
 	
 	for (int i = 0; i < sim->totalJobs; ++i) {
 		process *job = sim->jobs[i];
@@ -39,19 +40,18 @@ void run(simulation *sim,
 			       job->response_time,
 			       job->waiting_time,
 			       job->turnaround_time);
-			average_response_time += job->response_time;
-			average_waiting_time += job->waiting_time;
-			average_turnaround_time += job->turnaround_time;
+			totalResponseTime += job->response_time;
+			totalWaitingTime += job->waiting_time;
+			totalTurnaroundTime += job->turnaround_time;
+			finalTime = job->arrival_time + job->turnaround_time;
 		}
 	}
 	if (totalJobs) {
-		average_response_time /= totalJobs;
-		average_waiting_time /= totalJobs;
-		average_turnaround_time /= totalJobs;
-		printf("average: %.1f, %.1f, %.1f\n",
-		       average_response_time,
-		       average_waiting_time,
-		       average_turnaround_time);
+		printf("average: %.1f, %.1f, %.1f\nthroughput: %.1f\n",
+		       totalResponseTime / totalJobs,
+		       totalWaitingTime / totalJobs,
+		       totalTurnaroundTime / totalJobs,
+		       (finalTime - sim->jobs[0]->arrival_time) / totalJobs);
 	}
 }
 
