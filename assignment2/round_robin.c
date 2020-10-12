@@ -16,24 +16,28 @@ typedef struct {
     float turnaround; // completion_time - arrival_time
     float wait; // turnaround - service_time
     float elapsed;
-    int status; // 0 = Waiting 1 = Ready, 2 = Running, 3 = Done
+    int status; // -1 = Waiting 1 = Ready, 2 = Running, 3 = Done
 } job_t;
 
 void generate_job(job_t *job, int upper, int lower){
     //int seed = time(NULL);
     //srand(0);
-    float arrival_time = rand() % (upper-lower+1) + lower;
+    float arrival_time = (rand() % (upper-lower+1)) + lower;
     float service_time = rand() % 11;
     if(service_time == 0) service_time++;
     int priority = rand() % 5;
     if (priority == 0) priority++;
 
-    // First Job Always starts at time = 0;
-    //if(n == 0) arrival_time = 0;
-
     job->arrival_time = arrival_time;
     job->service_time = service_time;
     job->priority = priority;
+    job->completed_time = 0;
+    job->start_time = 0;
+    job->response = 0;
+    job->turnaround = 0;
+    job->wait = 0;
+    job->elapsed = 0;
+    job->status = -1;
 }
 
 
@@ -78,6 +82,7 @@ job_t* check_idle(job_t **queue, int *add_jobs){
             for(int k = 0; k < *add_jobs + N_JOBS; k++){
                 queue[k] = &tmp_queue[k];
             }
+            //i++;
         }
         else{ i++;
         }
@@ -134,7 +139,7 @@ void simulate(job_t *queue, int n_jobs){
 
             }
             // If Not Done & Other jobs in queue
-            else if (running_jobs > 1){
+            else if (running_jobs+waiting > 1){
                 job_t tmp = run_q[0]; // Current Job
                 // Shift left
                 for(int i = 0; i < running_jobs+waiting; i++){
@@ -184,43 +189,47 @@ void simulate(job_t *queue, int n_jobs){
 
 int main() {
 
-    // Problem seed 1602448081
     int seed = time(NULL);
     srand(seed);
 
+    int runs = 0;
+    float atp = 0, att = 0, awt = 0, art = 0;
 
-    // Create Queue
-    job_t *queue = (job_t *)malloc(N_JOBS * sizeof(job_t));;
-    for(int i = 0; i < N_JOBS; i++){
-        generate_job(&queue[i], 99, 0);
+    while(runs < 1){
+        printf("Seed = %d\n", seed);
+
+        // Create Queue
+        job_t *queue = (job_t *)malloc(N_JOBS * sizeof(job_t));;
+        for(int i = 0; i < N_JOBS; i++){
+            generate_job(&queue[i], 99, 0);
+        }
+
+        sort_queue(queue, N_JOBS);
+
+        for(int i = 0; i < N_JOBS; i++){
+            queue[i].id = i;
+            printf("\nJob # %d\n", queue[i].id);
+            print_job(&queue[i]);
+        }
+
+
+        // Fill intra idle times with jobs
+        int add_jobs = 0;
+        queue = check_idle(&queue, &add_jobs);
+
+        printf("\n*************************************************\nQueue for Round Robin Run: %d\n", runs+1);
+        for(int i = 0; i < N_JOBS + add_jobs; i++){
+            queue[i].id = i;
+            printf("\nJob # %d\n", queue[i].id);
+            print_job(&queue[i]);
+        }
+
+        printf("\n********************************************\nStatistics for Round Robin Run: %d\n", runs+1);
+        simulate(queue, N_JOBS+add_jobs);
+        printf("Seed = %d\n", seed);
+        free(queue);
+        runs++;
     }
 
-    // Print Queue Before Sort
-    printf("Queue Before Sort\n");
-    for(int i = 0; i < 10; i++){
-        printf("\n\nJob # %d\n", i);
-        print_job(&queue[i]);
-    }
-
-    sort_queue(queue, N_JOBS);
-
-    int add_jobs = 0;
-    queue = check_idle(&queue, &add_jobs);
-
-
-    printf("\n\nSEED: %d\n", seed);
-
-    // Print Queue After Sort
-    printf("\n****************\nQueue After Sort & Idle\n");
-    for(int i = 0; i < N_JOBS + add_jobs; i++){
-        queue[i].id = i;
-        queue[i].status = -1;
-        printf("\nJob # %d\n", queue[i].id);
-        print_job(&queue[i]);
-    }
-
-    simulate(queue, N_JOBS+add_jobs);
-
-    free(queue);
     return 0;
 }
