@@ -4,7 +4,7 @@
 #include "../job.h"
 
 /**
- * Called when a new job arrives at specific quanta.
+ * Signals when a job has arrived.
  *
  * @param job
  * @param quanta - quanta job is added in
@@ -12,7 +12,7 @@
 void SRT_Algorithm_Add(process *job, int quanta);
 
 /**
- * Called at each quanta, should return job id of which job is decided upon for that quanta.
+ * Runs the algorithm, called for each quanta.
  *
  * @param quanta
  * @return job id that is decided on to be ran, -1 if none decided
