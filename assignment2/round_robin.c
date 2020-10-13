@@ -42,9 +42,9 @@ void generate_job(job_t *job, int upper, int lower){
 
 
 void print_job(job_t *job){
-    printf("Arrival Time: %f\n", job->arrival_time);
-    printf("Service Time: %f\n", job->service_time);
-    printf("Priority: %d\n", job->priority);
+    printf("%.1f, ", job->arrival_time);
+    printf("%.1f, ", job->service_time);
+    printf("%d\n", job->priority);
 }
 
 void sort_queue(job_t *queue, int n){
@@ -90,15 +90,34 @@ job_t* check_idle(job_t **queue, int *add_jobs){
     return *queue;
 }
 
+void initialize_runq(job_t *job, int njobs){
+    for(int i = 0; i < njobs; ++i){
+        job[i].id = -1;
+        job[i].arrival_time = 0;
+        job[i].service_time = 0;
+        job[i].priority = 0;
+        job[i].completed_time = 0;
+        job[i].start_time = 0;
+        job[i].response = 0;
+        job[i].turnaround = 0;
+        job[i].wait = 0;
+        job[i].elapsed = 0;
+        job[i].status = 0;
+    }
+}
+
 // Round-Robin Simulation
-void simulate(job_t *queue, int n_jobs){
-    int completed_jobs = 0, current_time = 0, running_jobs = 0, waiting = 0;
+void simulate(job_t *queue, int n_jobs, float *atp, float *att, float *awt, float *art){
+    int completed_jobs = 0, running_jobs = 0, waiting = 0;
+    int current_time = 0;
     job_t *run_q = (job_t *)malloc(n_jobs * sizeof(job_t));
+    initialize_runq(run_q, n_jobs);
+
     run_q[0] = queue[0];
 
     while(completed_jobs < n_jobs){
 
-        if(current_time > 200){
+        if(current_time > 300){
             printf("\n\n****ERROR****\n\n\n");
             break;
         }
@@ -133,7 +152,7 @@ void simulate(job_t *queue, int n_jobs){
                 // Copy the rest to process queue
                 queue[id] = run_q[0];
                 // Shift Left
-                for(int i = 0; i <= running_jobs; i++){
+                for(int i = 0; i <= running_jobs+waiting; i++){
                     run_q[i] = run_q[i+1];
                 }
 
@@ -183,7 +202,14 @@ void simulate(job_t *queue, int n_jobs){
 
     // Throughput  = # Jobs / Total Time
     float tp = (float)n_jobs/(float)current_time;
-    printf("\nThroughput: %f\nResponse: %f\nTurnaround: %f\nWait: %f\n", tp, avg_rt, avg_tt, avg_wt);
+    printf("\nThroughput: %.2f\nResponse: %.2f\nTurnaround: %.2f\nWait: %.2f\n", tp, avg_rt, avg_tt, avg_wt);
+
+    *art += avg_rt;
+    *att += avg_tt;
+    *awt += avg_wt;
+    *atp += tp;
+
+    free(run_q);
 }
 
 
@@ -192,11 +218,11 @@ int main() {
     int seed = time(NULL);
     srand(seed);
 
-    int runs = 0;
+    float runs = 0, total_jobs = 0;
     float atp = 0, att = 0, awt = 0, art = 0;
 
-    while(runs < 1){
-        printf("Seed = %d\n", seed);
+    while(runs < 5){
+        //printf("Seed = %d\n", seed);
 
         // Create Queue
         job_t *queue = (job_t *)malloc(N_JOBS * sizeof(job_t));;
@@ -206,30 +232,33 @@ int main() {
 
         sort_queue(queue, N_JOBS);
 
-        for(int i = 0; i < N_JOBS; i++){
-            queue[i].id = i;
-            printf("\nJob # %d\n", queue[i].id);
-            print_job(&queue[i]);
-        }
-
-
         // Fill intra idle times with jobs
         int add_jobs = 0;
         queue = check_idle(&queue, &add_jobs);
 
-        printf("\n*************************************************\nQueue for Round Robin Run: %d\n", runs+1);
+        printf("\n*************************************************\nQueue for Round Robin Run: %d\n", (int)runs+1);
+        printf("*************************************************\n");
+        printf("Job | Arrival | Service | Priority\n");
+        printf("*************************************************\n");
         for(int i = 0; i < N_JOBS + add_jobs; i++){
             queue[i].id = i;
-            printf("\nJob # %d\n", queue[i].id);
+            printf("%c : ", queue[i].id+65);
             print_job(&queue[i]);
         }
 
-        printf("\n********************************************\nStatistics for Round Robin Run: %d\n", runs+1);
-        simulate(queue, N_JOBS+add_jobs);
-        printf("Seed = %d\n", seed);
+        printf("\n*************************************************\nStats for Round Robin Run: %d\n", (int)runs+1);
+        printf("*************************************************\n");
+        simulate(queue, N_JOBS+add_jobs, &atp, &att, &awt, &art);
+        total_jobs += N_JOBS+add_jobs;
+
         free(queue);
         runs++;
     }
+
+    printf("\n*************************************************\nAverages for all Round Robin Runs:\n");
+    printf("*************************************************\n");
+    printf("\nThroughput: %.2f\nResponse: %.2f\nTurnaround: %.2f\nWait: %.2f\n", atp/runs, art/runs, att/runs, awt/runs);
+    printf("Avg Jobs: %.1f\n", total_jobs/runs);
 
     return 0;
 }
