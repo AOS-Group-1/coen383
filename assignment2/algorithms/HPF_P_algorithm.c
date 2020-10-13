@@ -21,7 +21,8 @@ process *HPFPpop(process *queue, int *start, int *end) {
 }
 
 void HPF_P_Algorithm_Add(process *job, int quanta) {
-	job->end_time = job->service_time;
+	job->end_time       = job->service_time;
+	job->remaining_time = 6;
 	HPFPpush(HPFPqueue[job->priority - 1],
 	         &HPFPstart[job->priority - 1],
 	         &HPFPend[job->priority - 1],
@@ -29,6 +30,21 @@ void HPF_P_Algorithm_Add(process *job, int quanta) {
 }
 
 int HPF_P_Algorithm(int quanta) {
+	for (int i = 1; i < 4; ++i) {
+		for (int j = HPFPstart[i]; j != HPFPend[i]; j = (j + 1) % QUEUELEN) {
+			process *currentJob = &(HPFPqueue[i][j]);
+			currentJob->remaining_time--;
+		}
+		while (HPFPstart[i] != HPFPend[i]) {
+			process *currentJob = &(HPFPqueue[i][HPFPstart[i]]);
+			if (currentJob && currentJob->remaining_time <= 0) {
+				currentJob = HPFPpop(HPFPqueue[i], &HPFPstart[i], &HPFPend[i]);
+				currentJob->remaining_time = 6;
+				HPFPpush(HPFPqueue[i - 1], &HPFPstart[i - 1], &HPFPend[i - 1], currentJob);
+			} else
+				break;
+		}
+	}
 	for (int i = 0; i < 4; ++i) {
 		process *currentJob = HPFPpop(HPFPqueue[i], &HPFPstart[i], &HPFPend[i]);
 		if (currentJob) {
