@@ -8,7 +8,7 @@
 #define RUNS_PER_ALGO 5
 #define QUANTA 100
 
-//Process 
+//Process
 typedef struct {
     int process_id;
     float arrival_time;
