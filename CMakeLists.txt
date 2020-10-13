@@ -33,3 +33,5 @@ add_executable(assignment2_rr assignment2/round_robin.c)
 
 project(assignment2_hpf)
 add_executable(assignment2_hpf assignment2/hpf.c)
+
+project(coen383)
