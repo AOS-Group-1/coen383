@@ -78,7 +78,7 @@ job_t* check_idle(job_t **queue, int *add_jobs){
             }
             sort_queue(tmp_queue, N_JOBS+(*add_jobs));
             free(*queue);
-            queue = (job_t *)malloc((*add_jobs + N_JOBS) * sizeof(job_t));
+            queue = (job_t **)malloc((*add_jobs + N_JOBS) * sizeof(job_t));
             for(int k = 0; k < *add_jobs + N_JOBS; k++){
                 queue[k] = &tmp_queue[k];
             }
@@ -202,7 +202,7 @@ void simulate(job_t *queue, int n_jobs, float *atp, float *att, float *awt, floa
 
     // Throughput  = # Jobs / Total Time
     float tp = (float)n_jobs/(float)current_time;
-    printf("\nThroughput: %.2f\nResponse: %.2f\nTurnaround: %.2f\nWait: %.2f\n", tp, avg_rt, avg_tt, avg_wt);
+    printf("\n\n| Throughput: %.2f | Response: %.2f | Turnaround: %.2f | Wait: %.2f | \n", tp, avg_rt, avg_tt, avg_wt);
 
     *art += avg_rt;
     *att += avg_tt;
@@ -213,10 +213,14 @@ void simulate(job_t *queue, int n_jobs, float *atp, float *att, float *awt, floa
 }
 
 
-int main() {
+int main(int argc, char **argv) {
 
     int seed = time(NULL);
+    if(argc > 1){
+        seed = atoi(argv[1]);
+    }
     srand(seed);
+    printf("SEED = %d\n", seed);
 
     float runs = 0, total_jobs = 0;
     float atp = 0, att = 0, awt = 0, art = 0;
@@ -247,7 +251,7 @@ int main() {
         }
 
         printf("\n*************************************************\nStats for Round Robin Run: %d\n", (int)runs+1);
-        printf("*************************************************\n");
+        printf("*************************************************\n\n");
         simulate(queue, N_JOBS+add_jobs, &atp, &att, &awt, &art);
         total_jobs += N_JOBS+add_jobs;
 
@@ -257,7 +261,7 @@ int main() {
 
     printf("\n*************************************************\nAverages for all Round Robin Runs:\n");
     printf("*************************************************\n");
-    printf("\nThroughput: %.2f\nResponse: %.2f\nTurnaround: %.2f\nWait: %.2f\n", atp/runs, art/runs, att/runs, awt/runs);
+    printf("Throughput: %.2f\nResponse: %.2f\nTurnaround: %.2f\nWait: %.2f\n", atp/runs, art/runs, att/runs, awt/runs);
     printf("Avg Jobs: %.1f\n", total_jobs/runs);
 
     return 0;
