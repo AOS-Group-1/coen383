@@ -30,7 +30,7 @@ void calculateData(simulation *sim, const int *run, int quanta) {
 				job->response_time   = i;
 				job->turnaround_time = i + job->service_time;
 			} else {
-				job->turnaround_time = i;
+				job->turnaround_time = i + 1;
 			}
 		}
 	}
