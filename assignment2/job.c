@@ -58,6 +58,7 @@ void resetJobStats(simulation *sim) {
 	for (int i = 0; i < sim->totalJobs; ++i) {
 		process *job = sim->jobs[i];
 		job->end_time        = 0;
+		job->remaining_time  = 0;
 		job->waiting_time    = 0;
 		job->turnaround_time = 0;
 		job->response_time   = 0;
