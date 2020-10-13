@@ -27,3 +27,9 @@ add_executable(assignment2
         assignment2/algorithms/HPF_P_algorithm.h
         assignment2/algorithms/HPF_P_algorithm.c)
 target_link_libraries(assignment2 m)
+
+project(assignment2_rr)
+add_executable(assignment2_rr assignment2/round_robin.c)
+
+project(assignment2_hpf)
+add_executable(assignment2_hpf assignment2/hpf.c)
