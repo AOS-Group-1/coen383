@@ -5,7 +5,7 @@
 
 
 #define PROCESS_COUNT 30
-#define RUNS_PER_ALGO 1
+#define RUNS_PER_ALGO 5
 #define QUANTA 100
 
 //Process 
@@ -21,16 +21,10 @@ typedef struct {
 // MAIN Function
 int main(int argc, char *argv[]){
 
-    if(argv[1] && strcmp(argv[1], "-h") == 0){
-        printf("\t  Non-Preemptive :Highest priority first algorithm\n");
-        return 0;
-    }
-
     process proc_list[PROCESS_COUNT];
     int i;
     process *buff = malloc(PROCESS_COUNT * sizeof(process));
 
-    if(strcmp(argv[1], "hpf") == 0) {
         int seed = time(NULL);
         srand(seed);
 
@@ -48,10 +42,7 @@ int main(int argc, char *argv[]){
 
             hpf_nonpreemptive(b);
         }
-    }
-    else {
-        printf("Invalid options %s \n", argv[1]);
-    }
+   
     return 0;
 
 }
@@ -97,10 +88,10 @@ int generate_process(process *p)
 // Function to print the processes in a buffer.
 int print_procs(process *b){
     int i;
-    printf("|   id    |   arvlTime |   runTime |   remTime |  priority|\n");
+    printf("|   id    |   arvlTime |   runTime | priority|\n");
     printf("|-------------------------------------------------------------|\n");
     for (i=0; i<PROCESS_COUNT; i++){
-        printf("|   %-7d|   %-7.1f|   %-7.1f|   %-7.1f|   %-7d|\n", \
+        printf("|   %-7d|   %-7.1f|   %-7.1f|   %-7d|\n", \
             b[i].process_id,\
             b[i].arrival_time,\
             b[i].burst_time,\
