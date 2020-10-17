@@ -53,8 +53,7 @@ void SRT_Algorithm_Add(process *job, int quanta) {
 			process *tempJob = SRTcurrentJob;
 			SRTcurrentJob = job;
 			SRTcurrentJob->end_time = quanta + fmax(SRTcurrentJob->remaining_time - 1, 0);
-			tempJob->remaining_time   = tempJob->end_time - quanta;
-			tempJob->end_time       = 0;
+			tempJob->remaining_time   = tempJob->end_time - quanta + 1;
 			SRTpush(tempJob);
 		}
 	else {
