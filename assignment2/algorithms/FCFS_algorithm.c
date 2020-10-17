@@ -31,7 +31,8 @@ int FCFS_Algorithm(int quanta) {
 		currentJob->end_time--;
 		if (currentJob->end_time <= 0)
 			currentJob = FCFSpop();
-		return currentJob->id;
+		if (currentJob)
+			return currentJob->id;
 	}
 	return -1;
 }
