@@ -19,4 +19,6 @@ void HPF_P_Algorithm_Add(process *job, int quanta);
  */
 int HPF_P_Algorithm(int quanta);
 
+void HPFP_clearQueue();
+
 #endif //ASSIGNMENT2_HPF_P_ALGORITHM_H

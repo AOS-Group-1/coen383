@@ -11,7 +11,8 @@
 int quanta = 120;
 
 void run(void (*scheduleJobAdd)(process *, int),
-         int (*scheduleJob)(int)) {
+         int (*scheduleJob)(int),
+         void(*clearQueue)()) {
 	double finalResponseTime   = 0,
 	       finalWaitingTime    = 0,
 	       finalTurnaroundTime = 0;
@@ -30,7 +31,7 @@ void run(void (*scheduleJobAdd)(process *, int),
 		}
 		resetJobStats(sim);
 		
-		int *run = runAlgorithm(sim, quanta, scheduleJobAdd, scheduleJob);
+		int *run = runAlgorithm(sim, quanta, scheduleJobAdd, scheduleJob, clearQueue);
 		
 		for (int i = 0; i < quanta; ++i)
 			printf("%c", run[i]);
@@ -79,7 +80,8 @@ void run(void (*scheduleJobAdd)(process *, int),
 }
 
 void runHPF(void (*scheduleJobAdd)(process *, int),
-            int (*scheduleJob)(int)) {
+            int (*scheduleJob)(int),
+            void (*clearQueue)()) {
 	double finalResponseTime[4]   = {0},
 	       finalWaitingTime[4]    = {0},
 	       finalTurnaroundTime[4] = {0};
@@ -98,7 +100,7 @@ void runHPF(void (*scheduleJobAdd)(process *, int),
 		}
 		resetJobStats(sim);
 		
-		int *run = runAlgorithm(sim, quanta, scheduleJobAdd, scheduleJob);
+		int *run = runAlgorithm(sim, quanta, scheduleJobAdd, scheduleJob, clearQueue);
 		
 		for (int i = 0; i < quanta; ++i)
 			printf("%c", run[i]);
@@ -158,24 +160,16 @@ void runHPF(void (*scheduleJobAdd)(process *, int),
 }
 
 int main(int argc, char **argv) {
-	
-	int seed = time(NULL);
-	if(argc > 1){
-		seed = atoi(argv[1]);
-    }
-	srand(seed); // guarantee consistency when debugging
-	
-	
 	printf("FCFS\n");
-	run(FCFS_Algorithm_Add, FCFS_Algorithm);
+	run(FCFS_Algorithm_Add, FCFS_Algorithm, FCFS_clearQueue);
 	printf("SJF\n");
-	run(SJF_Algorithm_Add, SJF_Algorithm);
+	run(SJF_Algorithm_Add, SJF_Algorithm, SJF_clearQueue);
 	printf("SRT\n");
-	run(SRT_Algorithm_Add, SRT_Algorithm);
+	run(SRT_Algorithm_Add, SRT_Algorithm, SRT_clearQueue);
 //	printf("RR\n");
 //	run(RR_Algorithm_Add, RR_Algorithm);
 //	printf("HPF (NP)\n");
 //	runHPF(HPF_NP_Algorithm_Add, HPF_NP_Algorithm);
 	printf("HPF (P)\n");
-	runHPF(HPF_P_Algorithm_Add, HPF_P_Algorithm);
+	runHPF(HPF_P_Algorithm_Add, HPF_P_Algorithm, HPFP_clearQueue);
 }

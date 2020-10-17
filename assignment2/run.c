@@ -3,7 +3,8 @@
 
 int *runAlgorithm(simulation *sim, int quanta,
                   void (*scheduleJobAdd)(process *, int),
-                  int (*scheduleJob)(int)) {
+                  int (*scheduleJob)(int),
+                  void (*clearQueue)()) {
 	int *run       = malloc(sizeof(int) * (quanta));
 	int currentJob = 0;
 	
@@ -18,7 +19,7 @@ int *runAlgorithm(simulation *sim, int quanta,
 		run[time] = scheduleJob(time);
 		if (run[time] == -1) run[time] = '-';
 	}
-	
+	clearQueue();
 	return run;
 }
 

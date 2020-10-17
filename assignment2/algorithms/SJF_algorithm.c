@@ -24,3 +24,6 @@ int SJF_Algorithm(int quanta) {
     
     return SJFcurrJob->id;
 }
+
+void SJF_clearQueue() {
+}

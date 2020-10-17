@@ -17,7 +17,7 @@ void *sell(char *seller_type) {
 	return NULL; // thread exits
 }
 
-void wakeup_all_seller_threads() {
+void wakeup_all_selle r_threads() {
 	pthread_mutex_lock(&mutex);
 	pthread_cond_broadcast(&cond);
 	pthread_mutex_unlock(&mutex);

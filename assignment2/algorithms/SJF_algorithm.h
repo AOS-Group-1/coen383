@@ -22,4 +22,6 @@ void SJF_Algorithm_Add(process *job, int quanta);
  */
 int SJF_Algorithm(int quanta);
 
+void SJF_clearQueue();
+
 #endif //ASSIGNMENT2_SJF_ALGORITHM_H

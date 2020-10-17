@@ -19,4 +19,6 @@ void FCFS_Algorithm_Add(process *job, int quanta);
  */
 int FCFS_Algorithm(int quanta);
 
+void FCFS_clearQueue();
+
 #endif //ASSIGNMENT2_FCFS_ALGORITHM_H

@@ -36,3 +36,8 @@ int FCFS_Algorithm(int quanta) {
 	}
 	return -1;
 }
+
+void FCFS_clearQueue() {
+	FCFSstart = 0;
+	FCFSend   = 0;
+}
