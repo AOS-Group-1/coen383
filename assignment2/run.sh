@@ -1,3 +1,4 @@
 #!/bin/sh
 seed=1
-./rr.out $seed >> output.txt
+./rr $seed >> output.txt
+./hpq_pe $seed >> output.txt
