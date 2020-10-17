@@ -20,6 +20,12 @@ typedef struct {
 
 // MAIN Function
 int main(int argc, char *argv[]){
+	
+    int seed = time(NULL);
+	 if(argc > 1){
+        seed = atoi(argv[1]);
+    }
+	 srand(seed); // guarantee consistency when debugging
 
     process proc_list[PROCESS_COUNT];
     int i;
