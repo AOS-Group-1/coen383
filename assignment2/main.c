@@ -160,6 +160,12 @@ void runHPF(void (*scheduleJobAdd)(process *, int),
 }
 
 int main(int argc, char **argv) {
+	int seed = time(NULL);
+	if (argc > 1) {
+		seed = atoi(argv[1]);
+	}
+	srand(seed); // guarantee consistency when debugging
+	
 	printf("FCFS\n");
 	run(FCFS_Algorithm_Add, FCFS_Algorithm, FCFS_clearQueue);
 	printf("SJF\n");
