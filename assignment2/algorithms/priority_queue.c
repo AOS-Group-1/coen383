@@ -56,3 +56,7 @@ process* removeData(){
   }
    return NULL; 
 }
+
+void clearQueue(){
+  memset(intArray, 0, sizeof(intArray)); 
+}
