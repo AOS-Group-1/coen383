@@ -26,5 +26,5 @@ int SJF_Algorithm(int quanta) {
 }
 
 void SJF_clearQueue() {
-    clearQueue()
+    clearQueue();
 }
