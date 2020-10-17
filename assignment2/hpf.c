@@ -31,8 +31,8 @@ int main(int argc, char *argv[]){
     int i;
     process *buff = malloc(PROCESS_COUNT * sizeof(process));
 
-        int seed = time(NULL);
-        srand(seed);
+        //int seed = time(NULL);
+        //srand(seed);
 
         //srand(0);
         for (i=0; i< RUNS_PER_ALGO; i++)
