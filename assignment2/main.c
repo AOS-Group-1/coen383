@@ -55,9 +55,13 @@ void run(simulation *sim,
 	}
 }
 
-int main() {
+int main(int argc, char **argv) {
+	
 	int seed = time(NULL);
-//	srand(seed); // guarantee consistency when debugging
+	if(argc > 1){
+		seed = atoi(argv[1]);
+    }
+	srand(seed); // guarantee consistency when debugging
 	
 	int totalJobs = 10;
 	
