@@ -2,6 +2,11 @@
 #define ASSIGNMENT3_CUSTOMER_H
 
 #include <string>
+#include <vector>
+#include <algorithm>
+#include <queue>
+#include <stdlib.h>
+#include <time.h>
 
 class Customer {
 public:
@@ -13,5 +18,8 @@ public:
 	int waitingTime;
 	
 };
+
+bool cmp(Customer a, Customer b);
+void generate_customers(int n, std::queue <Customer> &customers_queue);
 
 #endif //ASSIGNMENT3_CUSTOMER_H

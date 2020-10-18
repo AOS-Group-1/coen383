@@ -3,9 +3,6 @@
 #include <time.h>
 #include <pthread.h>
 #include <iostream>
-#include <queue>
-#include <vector>
-#include <algorithm>
 #include "customer.h"
 
 using namespace std;
@@ -30,50 +27,6 @@ void wakeup_all_seller_threads() {
 	pthread_mutex_lock(&mutex);
 	pthread_cond_broadcast(&cond);
 	pthread_mutex_unlock(&mutex);
-}
-
-bool cmp(Customer a, Customer b){
-    return a.arrivalTime < b.arrivalTime;
-}
-void generate_customers(int n, queue <Customer> &customers_queue){
-    vector <Customer> array;
-    // H-Customers
-    for(int i=0; i<1*n; ++i){
-        Customer c;
-        c.id = "H";
-        c.arrivalTime = rand() % 60;
-        c.serviceTime = rand() % 2 + 1;
-        c.responseTime = 0;
-        c.turnaroundTime = 0;
-        c.waitingTime = 0;
-        array.push_back(c);
-    }
-    // M-Customers
-    for(int i=0; i<3*n; ++i){
-        Customer c;
-        c.id = "M";
-        c.arrivalTime = rand() % 60;
-        c.serviceTime = rand() % 3 + 2;
-        c.responseTime = 0;
-        c.turnaroundTime = 0;
-        c.waitingTime = 0;
-        array.push_back(c);
-    }
-    // L-Customers
-    for(int i=0; i<6*n; ++i){
-        Customer c;
-        c.id = "L";
-        c.arrivalTime = rand() % 60;
-        c.serviceTime = rand() % 4 + 4;
-        c.responseTime = 0;
-        c.turnaroundTime = 0;
-        c.waitingTime = 0;
-        array.push_back(c);
-    }
-    sort(array.begin(), array.end(), cmp);
-    for(auto i : array){
-        customers_queue.push(i);
-    }
 }
 
 int main(int argc, char **argv) {
