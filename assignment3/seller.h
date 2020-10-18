@@ -11,6 +11,8 @@ class Seller {
 	
 	std::queue<Customer> queue;
 	
+	Seller(char type, int id);
+	
 	void customerArrives(Customer customer);
 	
 	// print events that happen during the time slice

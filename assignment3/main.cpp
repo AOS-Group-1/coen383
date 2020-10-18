@@ -11,6 +11,7 @@ void *sell(char *seller_type) {
 		pthread_mutex_lock(&mutex);
 		pthread_cond_wait(&cond, &mutex);
 		pthread_mutex_unlock(&mutex);
+		
 		// TODO: Serve any buyer available in this seller queue that is ready
 		// now to buy ticket till done with all relevant buyers in their queue
 	}

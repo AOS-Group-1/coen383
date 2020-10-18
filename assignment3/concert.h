@@ -9,11 +9,13 @@ class Concert {
 	
 	pthread_mutex_t seatMutex;
 	
+	Concert();
+	
 	// returns false if could not set seat
 	bool allocateSeat(Customer customer, int row, int column);
 	
-	int isFull();
-	int isRowFull(int row);
+	bool isFull();
+	bool isRowFull(int row);
 	
 };
 
