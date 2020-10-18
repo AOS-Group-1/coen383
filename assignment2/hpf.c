@@ -2,13 +2,14 @@
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
+#include <time.h>
 
 
-#define PROCESS_COUNT 30
+#define PROCESS_COUNT 20
 #define RUNS_PER_ALGO 5
 #define QUANTA 100
 
-//Process
+//Process 
 typedef struct {
     int process_id;
     float arrival_time;
@@ -18,40 +19,6 @@ typedef struct {
 } process;
 
 
-// MAIN Function
-int main(int argc, char *argv[]){
-	
-    int seed = time(NULL);
-	 if(argc > 1){
-        seed = atoi(argv[1]);
-    }
-	 srand(seed); // guarantee consistency when debugging
-
-    process proc_list[PROCESS_COUNT];
-    int i;
-    process *buff = malloc(PROCESS_COUNT * sizeof(process));
-
-        int seed = time(NULL);
-        srand(seed);
-
-        //srand(0);
-        for (i=0; i< RUNS_PER_ALGO; i++)
-        {
-            printf("%d\n", i);
-            generate_process(buff);
-            print_procs(buff);
-            process b[PROCESS_COUNT];
-            for(int j=0;j<PROCESS_COUNT;j++) {
-               // a[j] = buff[j];
-                b[j] = buff[j];
-            }
-
-            hpf_nonpreemptive(b);
-        }
-   
-    return 0;
-
-}
 
 // Function to compare the arrival time of a process
 int compare_arrival_times(const void * a, const void * b)
@@ -94,24 +61,24 @@ int generate_process(process *p)
 // Function to print the processes in a buffer.
 int print_procs(process *b){
     int i;
-    printf("|   id    |   arvlTime |   runTime | priority|\n");
+    printf("|   id    |   arvlTime |   runTime |   priority|\n");
     printf("|-------------------------------------------------------------|\n");
     for (i=0; i<PROCESS_COUNT; i++){
-        printf("|   %-7d|   %-7.1f|   %-7.1f|   %-7d|\n", \
-            b[i].process_id,\
+        printf("|   %-c|   %-7.1f|   %-7.1f|      %-7d|\n", \
+            b[i].process_id+65,\
             b[i].arrival_time,\
             b[i].burst_time,\
             b[i].priority);
 
     }
-    printf("--------------------------------------------------------------\n");
+    printf("--------------------------------------------------------------\n\n");
 
     return 0;
 }
 
 int last_q;
 
-void print_statistics(process* ptr,int* fs,int* ls,int* done) {
+void print_statistics(process* ptr,int* fs,int* ls,int* done,int *total_jobs, float *atp, float *att, float *awt, float *art) {
     float avg_response_time = 0,
 	  avg_turn_around_time = 0,
 	  throughput = 0,
@@ -153,7 +120,7 @@ void print_statistics(process* ptr,int* fs,int* ls,int* done) {
 		th[i] = ((1.0*proc_count[i]) / (1.0*last_q));
     }
 
-    printf("\n----Overall stats----\n");
+    printf("\n\n----Overall stats----\n");
     printf("Total completed processes: %d\n",processes);
     avg_response_time /= processes;
     avg_turn_around_time /= processes;
@@ -162,7 +129,14 @@ void print_statistics(process* ptr,int* fs,int* ls,int* done) {
     throughput = (1.0*(processes))/(1.0*last_q);
     printf("Avg. throughput: %f\n",throughput);
 
-    
+    *art += avg_response_time;
+    *att+=avg_turn_around_time;
+    *awt+=avg_waiting_time;
+    *atp+=throughput;
+    *total_jobs+=processes;
+  
+
+
     printf("\n--priority specific stats----\n");
 
     for(int i=0;i<4;i++) {
@@ -173,7 +147,7 @@ void print_statistics(process* ptr,int* fs,int* ls,int* done) {
 }
 
 
-int hpf_nonpreemptive(process *ptr) {
+int hpf_nonpreemptive(process *ptr, int *total_jobs, float *atp, float *att, float *awt, float *art) {
 
     last_q = QUANTA;
 
@@ -233,7 +207,7 @@ int hpf_nonpreemptive(process *ptr) {
 				queue[i-1][idx[i-1]] = queue[i][j]; // Insert process into higher priority queue
 				queue[i-1][idx[i-1]].age = 0; 
 				queue[i-1][idx[i-1]].priority--;
-				printf("Process %d aged one priority up\n",queue[i-1][idx[i-1]].process_id);
+				//printf("\nProcess %d aged one priority up\n",queue[i-1][idx[i-1]].process_id);
 
 				idx[i-1]++;
 				queue[i][j].burst_time = -1;
@@ -259,7 +233,7 @@ int hpf_nonpreemptive(process *ptr) {
 					break;
 			}
 			if(target_queue == -1) {
-				printf("No jobs to process at %d\n",q);
+				printf("-");
 				continue;
 			}
 			int active_process_index = 0;
@@ -274,9 +248,10 @@ int hpf_nonpreemptive(process *ptr) {
 		last_served[active_process->process_id] = q;
 
 		if(active_process->burst_time < 1.0) {
-			printf("T %d: %d(%f,Priority: %d)   (CPU idle for %f quantum)\n",q,active_process->process_id,active_process->burst_time,active_process->priority,(1.0-(active_process->burst_time)));
+			//printf("T %d: %c(%f,Priority: %d)   (CPU idle for %f quantum)\n",q,active_process->process_id+65,active_process->burst_time,active_process->priority,(1.0-(active_process->burst_time)));
 		} else {
-			printf("T %d: %d(%f,Priority: %d)\n",q,active_process->process_id,active_process->burst_time,active_process->priority);
+            printf("%c",active_process->process_id+65);
+			//printf("T %d: %c(%f,Priority: %d)\n",q,active_process->process_id+65,active_process->burst_time,active_process->priority);
 		}
 
 		active_process->burst_time -= 1.0;
@@ -287,6 +262,48 @@ int hpf_nonpreemptive(process *ptr) {
 		}
     }
 
-    print_statistics(ptr,first_served,last_served,done);
+    print_statistics(ptr,first_served,last_served,done, total_jobs, atp, att, awt, art);
     return 0;
+}
+
+
+// MAIN Function
+int main(int argc, char *argv[]){
+
+	printf("\n\n**************** Highest Priority First ******************\n");
+    int seed = time(NULL);
+	 if(argc > 1){
+        seed = atoi(argv[1]);
+    }
+	 srand(seed); // guarantee consistency when debugging
+
+    process proc_list[PROCESS_COUNT];
+    int i;
+    process *buff = malloc(PROCESS_COUNT * sizeof(process));
+
+    
+    float atp = 0, att = 0, awt = 0, art = 0;
+    int total_jobs=0;
+    
+      
+    for (i=0; i< RUNS_PER_ALGO; i++){
+        printf("%d\n", i);
+        generate_process(buff);
+        print_procs(buff);
+        process b[PROCESS_COUNT];
+        for(int j=0;j<PROCESS_COUNT;j++) {
+            // a[j] = buff[j];
+            b[j] = buff[j];
+        }
+
+        hpf_nonpreemptive(b, &total_jobs, &atp, &att, &awt, &art);
+    }
+   
+    printf("\n*************************************************\nAverages for all HPF Runs:\n");
+    printf("*************************************************\n");
+    printf("Throughput: %.2f\nResponse: %.2f\nTurnaround: %.2f\nWait: %.2f\n", atp/RUNS_PER_ALGO, art/RUNS_PER_ALGO, att/RUNS_PER_ALGO, awt/RUNS_PER_ALGO);
+    printf("Avg Jobs: %d\n", total_jobs/RUNS_PER_ALGO);
+
+    return 0;
+
 }
