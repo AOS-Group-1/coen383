@@ -57,3 +57,10 @@ int HPF_P_Algorithm(int quanta) {
 	}
 	return -1;
 }
+
+void HPFP_clearQueue() {
+	for (int i = 0; i < 4; ++i) {
+		HPFPstart[i] = 0;
+		HPFPend[i]   = 0;
+	}
+}

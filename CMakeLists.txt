@@ -35,6 +35,9 @@ project(assignment2_hpf)
 add_executable(assignment2_hpf assignment2/hpf.c)
 
 project(assignment3)
-add_executable(assignment3 assignment3/main.c)
+add_executable(assignment3
+        assignment3/main.cpp
+        assignment3/seller.h
+        assignment3/concert.h assignment3/customer.h)
 
 project(coen383)

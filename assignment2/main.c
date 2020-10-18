@@ -1,6 +1,7 @@
 #include <time.h>
 #include <stdio.h>
 #include <math.h>
+#include <stdlib.h>
 #include "job.h"
 #include "run.h"
 #include "algorithms/FCFS_algorithm.h"
@@ -8,29 +9,26 @@
 #include "algorithms/SRT_algorithm.h"
 #include "algorithms/HPF_P_algorithm.h"
 
-int quanta = 120;
+int quanta = 150;
 
 void run(void (*scheduleJobAdd)(process *, int),
-         int (*scheduleJob)(int)) {
+         int (*scheduleJob)(int),
+         void(*clearQueue)()) {
 	double finalResponseTime   = 0,
 	       finalWaitingTime    = 0,
 	       finalTurnaroundTime = 0;
-	
-	int finalJobs = 0;
+	int    finalJobs           = 0;
 	
 	for (int j = 0; j < 5; ++j) {
-		int jobs = 10;
-		
-		simulation *sim = generateJobs(jobs);
+		simulation *sim = generateJobs(10);
 		
 		for (int i = 0; i < sim->totalJobs; ++i) {
-			process *job = sim->jobs[i];
+			process *job = &sim->jobs[i];
 			printf("%c: %.1f, %.1f, %i\n", job->id,
 			       job->arrival_time, job->service_time, job->priority);
 		}
-		resetJobStats(sim);
 		
-		int *run = runAlgorithm(sim, quanta, scheduleJobAdd, scheduleJob);
+		int *run = runAlgorithm(sim, quanta, scheduleJobAdd, scheduleJob, clearQueue);
 		
 		for (int i = 0; i < quanta; ++i)
 			printf("%c", run[i]);
@@ -43,24 +41,21 @@ void run(void (*scheduleJobAdd)(process *, int),
 		       totalTurnaroundTime = 0;
 		
 		int    totalJobs = 0;
-		double finalTime = 0;
+		double firstTime = 0,
+		       finalTime = 0;
 		
 		for (int i = 0; i < sim->totalJobs; ++i) {
-			process *job = sim->jobs[i];
+			process *job = &sim->jobs[i];
 			if (job->waiting_time != 0) {
 				totalJobs++;
 				finalJobs++;
-				printf("%c: %.1f, %.1f, %.1f\n",
-				       job->id,
-				       job->response_time,
-				       job->waiting_time,
-				       job->turnaround_time);
 				totalResponseTime += job->response_time;
 				finalResponseTime += job->response_time;
 				totalWaitingTime += job->waiting_time;
 				finalWaitingTime += job->waiting_time;
 				totalTurnaroundTime += job->turnaround_time;
 				finalTurnaroundTime += job->turnaround_time;
+				firstTime = fmin(job->arrival_time, firstTime);
 				finalTime = fmax(job->arrival_time + job->turnaround_time, finalTime);
 			}
 		}
@@ -69,7 +64,7 @@ void run(void (*scheduleJobAdd)(process *, int),
 			       totalResponseTime / totalJobs,
 			       totalWaitingTime / totalJobs,
 			       totalTurnaroundTime / totalJobs,
-			       totalJobs / (finalTime - sim->jobs[0]->arrival_time));
+			       totalJobs / (finalTime - sim->jobs[0].arrival_time));
 		}
 	}
 	printf("final average: %.2f, %.2f, %.2f\n\n",
@@ -79,7 +74,8 @@ void run(void (*scheduleJobAdd)(process *, int),
 }
 
 void runHPF(void (*scheduleJobAdd)(process *, int),
-            int (*scheduleJob)(int)) {
+            int (*scheduleJob)(int),
+            void (*clearQueue)()) {
 	double finalResponseTime[4]   = {0},
 	       finalWaitingTime[4]    = {0},
 	       finalTurnaroundTime[4] = {0};
@@ -92,13 +88,12 @@ void runHPF(void (*scheduleJobAdd)(process *, int),
 		simulation *sim = generateJobs(jobs);
 		
 		for (int i = 0; i < sim->totalJobs; ++i) {
-			process *job = sim->jobs[i];
+			process *job = &sim->jobs[i];
 			printf("%c: %.1f, %.1f, %i\n", job->id,
 			       job->arrival_time, job->service_time, job->priority);
 		}
-		resetJobStats(sim);
 		
-		int *run = runAlgorithm(sim, quanta, scheduleJobAdd, scheduleJob);
+		int *run = runAlgorithm(sim, quanta, scheduleJobAdd, scheduleJob, clearQueue);
 		
 		for (int i = 0; i < quanta; ++i)
 			printf("%c", run[i]);
@@ -111,19 +106,14 @@ void runHPF(void (*scheduleJobAdd)(process *, int),
 		       totalTurnaroundTime[4] = {0};
 		
 		int    totalJobs[4] = {0};
-		double firstTime[4] = {0};
-		double finalTime[4] = {0};
+		double firstTime[4] = {0},
+		       finalTime[4] = {0};
 		
 		for (int i = 0; i < sim->totalJobs; ++i) {
-			process *job = sim->jobs[i];
+			process *job = &sim->jobs[i];
 			if (job->waiting_time != 0) {
 				totalJobs[job->priority - 1]++;
 				finalJobs[job->priority - 1]++;
-				printf("%c: %.1f, %.1f, %.1f\n",
-				       job->id,
-				       job->response_time,
-				       job->waiting_time,
-				       job->turnaround_time);
 				totalResponseTime[job->priority - 1] += job->response_time;
 				finalResponseTime[job->priority - 1] += job->response_time;
 				totalWaitingTime[job->priority - 1] += job->waiting_time;
@@ -139,7 +129,7 @@ void runHPF(void (*scheduleJobAdd)(process *, int),
 		for (int i = 0; i < 4; ++i) {
 			if (totalJobs[i]) {
 				printf("priority %i - average: %.2f, %.2f, %.2f\nthroughput: %.2f\n",
-				       i,
+				       i + 1,
 				       totalResponseTime[i] / totalJobs[i],
 				       totalWaitingTime[i] / totalJobs[i],
 				       totalTurnaroundTime[i] / totalJobs[i],
@@ -149,7 +139,7 @@ void runHPF(void (*scheduleJobAdd)(process *, int),
 	}
 	for (int i = 0; i < 4; ++i) {
 		printf("priority %i - final average: %.2f, %.2f, %.2f\n",
-		       i,
+		       i + 1,
 		       finalResponseTime[i] / finalJobs[i],
 		       finalWaitingTime[i] / finalJobs[i],
 		       finalTurnaroundTime[i] / finalJobs[i]);
@@ -158,24 +148,22 @@ void runHPF(void (*scheduleJobAdd)(process *, int),
 }
 
 int main(int argc, char **argv) {
-	
 	int seed = time(NULL);
-	if(argc > 1){
+	if (argc > 1) {
 		seed = atoi(argv[1]);
-    }
+	}
 	srand(seed); // guarantee consistency when debugging
 	
-	
 	printf("FCFS\n");
-	run(FCFS_Algorithm_Add, FCFS_Algorithm);
+	run(FCFS_Algorithm_Add, FCFS_Algorithm, FCFS_clearQueue);
 	printf("SJF\n");
-	run(SJF_Algorithm_Add, SJF_Algorithm);
+	run(SJF_Algorithm_Add, SJF_Algorithm, SJF_clearQueue);
 	printf("SRT\n");
-	run(SRT_Algorithm_Add, SRT_Algorithm);
+	run(SRT_Algorithm_Add, SRT_Algorithm, SRT_clearQueue);
 //	printf("RR\n");
 //	run(RR_Algorithm_Add, RR_Algorithm);
 //	printf("HPF (NP)\n");
 //	runHPF(HPF_NP_Algorithm_Add, HPF_NP_Algorithm);
 	printf("HPF (P)\n");
-	runHPF(HPF_P_Algorithm_Add, HPF_P_Algorithm);
+	runHPF(HPF_P_Algorithm_Add, HPF_P_Algorithm, HPFP_clearQueue);
 }

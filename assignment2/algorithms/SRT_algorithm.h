@@ -19,4 +19,6 @@ void SRT_Algorithm_Add(process *job, int quanta);
  */
 int SRT_Algorithm(int quanta);
 
+void SRT_clearQueue();
+
 #endif //ASSIGNMENT2_SRT_ALGORITHM_H

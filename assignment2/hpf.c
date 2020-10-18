@@ -18,8 +18,6 @@ typedef struct {
     int age;
 } process;
 
-
-
 // Function to compare the arrival time of a process
 int compare_arrival_times(const void * a, const void * b)
 {
