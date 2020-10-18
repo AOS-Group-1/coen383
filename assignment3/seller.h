@@ -13,7 +13,7 @@ class Seller {
 	
 	Seller(char type, int id);
 	
-	void customerArrives(Customer customer);
+	void customerArrives(const Customer *customer);
 	
 	// print events that happen during the time slice
 	void timeSlice(int time);
