@@ -12,7 +12,7 @@ class Concert {
 	Concert();
 	
 	// returns false if could not set seat
-	bool allocateSeat(Customer *customer, int row, int column);
+	bool allocateSeat(Customer &customer, int row, int column);
 	
 	bool isFull();
 	bool isRowFull(int row);
