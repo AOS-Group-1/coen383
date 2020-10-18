@@ -38,7 +38,7 @@ bool cmp(Customer a, Customer b){
 void generate_customers(int n, queue <Customer> &customers_queue){
     vector <Customer> array;
     // H-Customers
-    for(int i=0; i<n; ++i){
+    for(int i=0; i<1*n; ++i){
         Customer c;
         c.id = "H";
         c.arrivalTime = rand() % 60;
@@ -49,7 +49,7 @@ void generate_customers(int n, queue <Customer> &customers_queue){
         array.push_back(c);
     }
     // M-Customers
-    for(int i=0; i<n; ++i){
+    for(int i=0; i<3*n; ++i){
         Customer c;
         c.id = "M";
         c.arrivalTime = rand() % 60;
@@ -60,7 +60,7 @@ void generate_customers(int n, queue <Customer> &customers_queue){
         array.push_back(c);
     }
     // L-Customers
-    for(int i=0; i<n; ++i){
+    for(int i=0; i<6*n; ++i){
         Customer c;
         c.id = "L";
         c.arrivalTime = rand() % 60;
