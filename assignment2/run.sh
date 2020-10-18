@@ -1,11 +1,10 @@
 #!/bin/sh
 seed=1
-rm ../p2/output.txt
-cd ..
-mkdir p2
-cd p2
+mkdir cmake-build-debug
+cd cmake-build-debug
 cmake ..
 make
-../p2/assignment2 $seed >> output.txt
-../p2/assignment2_rr $seed >> output.txt
-../p2/assignment2_hpf $seed >> output.txt
+cd ..
+./cmake-build-debug/assignment2 $seed >> output.txt
+./cmake-build-debug/assignment2_rr $seed >> output.txt
+./cmake-build-debug/assignment2_hpf $seed >> output.txt
