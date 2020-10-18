@@ -7,7 +7,7 @@
 class Seller {
 	
 	char type;
-	int  row;
+	int  id;
 	
 	std::queue<Customer> queue;
 	

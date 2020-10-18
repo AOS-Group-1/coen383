@@ -7,6 +7,8 @@ class Concert {
 	
 	Customer seats[10][10];
 	
+	pthread_mutex_t seatMutex;
+	
 	// returns false if could not set seat
 	bool allocateSeat(Customer customer, int row, int column);
 	
