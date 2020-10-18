@@ -4,10 +4,10 @@
 #include <string>
 
 class Customer {
-	
+public:
 	std::string id;
-	
 	int arrivalTime;
+	int serviceTime;
 	int responseTime;
 	int turnaroundTime;
 	int waitingTime;

@@ -1,6 +1,14 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <time.h>
 #include <pthread.h>
+#include <iostream>
+#include <queue>
+#include <vector>
+#include <algorithm>
+#include "customer.h"
+
+using namespace std;
 
 pthread_cond_t  cond  = PTHREAD_COND_INITIALIZER;
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
@@ -24,7 +32,63 @@ void wakeup_all_seller_threads() {
 	pthread_mutex_unlock(&mutex);
 }
 
-int main() {
+bool cmp(Customer a, Customer b){
+    return a.arrivalTime < b.arrivalTime;
+}
+void generate_customers(int n, queue <Customer> &customers_queue){
+    vector <Customer> array;
+    // H-Customers
+    for(int i=0; i<n; ++i){
+        Customer c;
+        c.id = "H";
+        c.arrivalTime = rand() % 60;
+        c.serviceTime = rand() % 2 + 1;
+        c.responseTime = 0;
+        c.turnaroundTime = 0;
+        c.waitingTime = 0;
+        array.push_back(c);
+    }
+    // M-Customers
+    for(int i=0; i<n; ++i){
+        Customer c;
+        c.id = "M";
+        c.arrivalTime = rand() % 60;
+        c.serviceTime = rand() % 3 + 2;
+        c.responseTime = 0;
+        c.turnaroundTime = 0;
+        c.waitingTime = 0;
+        array.push_back(c);
+    }
+    // L-Customers
+    for(int i=0; i<n; ++i){
+        Customer c;
+        c.id = "L";
+        c.arrivalTime = rand() % 60;
+        c.serviceTime = rand() % 4 + 4;
+        c.responseTime = 0;
+        c.turnaroundTime = 0;
+        c.waitingTime = 0;
+        array.push_back(c);
+    }
+    sort(array.begin(), array.end(), cmp);
+    for(auto i : array){
+        customers_queue.push(i);
+    }
+}
+
+int main(int argc, char **argv) {
+
+    int seed = time(NULL);
+    srand(seed);
+
+    // N : Customers to server
+    int n = 10;
+    if(argc > 1){
+        n = atoi(argv[1]);
+    }
+    queue <Customer> customers_queue;
+    generate_customers(n, customers_queue);
+
 	pthread_t tids[10];
 	char      seller_type;
 	// Create necessary data structures for the simulator.
