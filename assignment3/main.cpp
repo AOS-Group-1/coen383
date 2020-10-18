@@ -1,6 +1,6 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <time.h>
+#include <cstdlib>
+#include <cstdio>
+#include <ctime>
 #include <pthread.h>
 #include <iostream>
 #include "customer.h"

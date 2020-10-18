@@ -37,8 +37,11 @@ add_executable(assignment2_hpf assignment2/hpf.c)
 project(assignment3)
 add_executable(assignment3
         assignment3/main.cpp
+        assignment3/concert.h
         assignment3/seller.h
-        assignment3/concert.h assignment3/customer.h)
+        assignment3/seller.cpp
+        assignment3/customer.h
+        assignment3/customer.cpp)
 target_link_libraries(assignment3 pthread)
 
 project(coen383)

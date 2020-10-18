@@ -5,18 +5,19 @@
 #include <vector>
 #include <algorithm>
 #include <queue>
-#include <stdlib.h>
-#include <time.h>
+#include <cstdlib>
+#include <ctime>
 
 class Customer {
 public:
-	std::string id;
-	int arrivalTime;
-	int serviceTime;
-	int responseTime;
-	int turnaroundTime;
-	int waitingTime;
 	
+	std::string id;
+	
+	int         arrivalTime    = 0;
+	int         serviceTime    = 0;
+	int         responseTime   = 0;
+	int         turnaroundTime = 0;
+	int         waitingTime    = 0;
 };
 
 bool cmp(Customer a, Customer b);

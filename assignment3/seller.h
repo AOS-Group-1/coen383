@@ -5,11 +5,10 @@
 #include "customer.h"
 
 class Seller {
+public:
 	
 	char type;
 	int  id;
-	
-	std::queue<Customer> queue;
 	
 	Seller(char type, int id);
 	
@@ -17,6 +16,10 @@ class Seller {
 	
 	// print events that happen during the time slice
 	void timeSlice(int time);
+
+private:
+	
+	std::queue<Customer> queue;
 	
 };
 
