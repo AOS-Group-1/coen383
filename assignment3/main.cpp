@@ -13,6 +13,8 @@ pthread_cond_t  cond  = PTHREAD_COND_INITIALIZER;
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 int current_time = 0;
 int run = 0;
+int TIME_LIMIT = 60;
+int TOTAL_SEATS = 100;
 
 // seller thread to serve one time slice (1 minute)
 void *sell(Seller *seller_info) {
@@ -22,7 +24,10 @@ void *sell(Seller *seller_info) {
     //pthread_mutex_unlock(&mutex);
 
 
-	while (current_time < 2) {
+	// while loops sells ticket while
+	// 1. time has not reached TIME_LIMIT (60) minutes
+	// 2. seats sold is not more than TOTAL_SEATS (100) seats
+	while (current_time < TIME_LIMIT /* && seats_sold < TOTAL_SEATS */) {
 
         pthread_mutex_lock(&mutex);
         printf("P: %p | Type: %c | ID: %d | time: %d | run: %d\n", &seller_info, seller_info->type, seller_info->id, current_time, run);
@@ -45,6 +50,40 @@ void *sell(Seller *seller_info) {
 
 		// TODO: Serve any buyer available in this seller queue that is ready
 		// now to buy ticket till done with all relevant buyers in their queue
+
+		// HIGH SELLER
+		if(seller_info->type == 'H') {
+			// if buyer in high seller queue
+			if(!seller_info->queue.empty()) {
+				// sell ticket to buyer in high queue
+
+
+				// update current_time (generate random time [1,2] minutes)
+				current_time = current_time + (rand() % 2) + 1;
+			}
+		}
+		// MEDIUM SELLER
+		else if(seller_info->type == 'M') {
+			if(!seller_info->queue.empty()) {
+				// sell ticket to buyer in medium queues
+
+
+				// update current_time (generate random time [2,4] minutes)
+				current_time = current_time + (rand() % 3) + 2;
+			}
+		}
+		// LOW SELLER
+		else {
+			// if buyer in low seller queue
+			if(!seller_info->queue.empty()) {
+				// sell ticket to buyer in low queues
+			
+			
+				// update current_time (generate random time [4,7] minutes)
+				current_time = current_time + (rand() % 4) + 4;
+			}
+		}
+
 	}
 
 	return NULL; // thread exits
