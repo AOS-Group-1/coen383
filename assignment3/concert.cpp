@@ -6,10 +6,12 @@ Concert::Concert() {
 }
 
 bool Concert::allocateSeat(Customer &customer, int row, int column) {
-    if(pthread_mutex_trylock(&seatMutex) == 0) {
+    pthread_mutex_lock(&seatMutex);
+    //check if seat is filled after you get the lock
+    if(seats[row][column] != nullptr) {
+        pthread_mutex_unlock(&seatMutex);
         return false;
     }
-    pthread_mutex_lock(&seatMutex);
     seats[row][column] = &customer;
     pthread_mutex_unlock(&seatMutex);
     return true;
