@@ -38,6 +38,7 @@ project(assignment3)
 add_executable(assignment3
         assignment3/main.cpp
         assignment3/concert.h
+        assignment3/concert.cpp
         assignment3/seller.h
         assignment3/seller.cpp
         assignment3/customer.h

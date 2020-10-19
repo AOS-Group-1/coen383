@@ -21,10 +21,26 @@ void Seller::customerArrives(Customer &customer) {
 void Seller::timeSlice(int time) {
 	if (queue.empty()) return;
 	Customer customer = queue.front();
-	if (customer.responseTime == 0) {
+	if (customer.responseTime == 0 && customer.turnaroundTime == 0) {
+		bool result;
+		switch (this->type) {
+			case 'H':
+				result = concert.allocateSeat(*this, 1);
+				break;
+			case 'M':
+				result = concert.allocateSeat(*this, 5);
+				break;
+			case 'L':
+				result = concert.allocateSeat(*this, 10);
+				break;
+		}
 		std::cout << printTime(time) << " - " << customer.id << " served" << std::endl;
-		customer.responseTime   = time;
-		customer.turnaroundTime = time + customer.serviceTime;
+		customer.responseTime = time;
+		if (result) {
+			customer.turnaroundTime = time + customer.serviceTime;
+		} else {
+			queue.pop();
+		}
 	}
 	if (time > customer.turnaroundTime) {
 		std::cout << printTime(time) << " - " << customer.id << " completed" << std::endl;

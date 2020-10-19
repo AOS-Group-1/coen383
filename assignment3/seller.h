@@ -3,12 +3,15 @@
 
 #include <queue>
 #include "customer.h"
+#include "concert.h"
 
 class Seller {
 public:
 	
 	char type;
 	int  id;
+	
+	Concert concert;
 	
 	Seller(char type, int id);
 	

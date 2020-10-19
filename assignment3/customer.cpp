@@ -1,4 +1,4 @@
-#include <customer.h>
+#include "customer.h"
 
 bool cmp(Customer a, Customer b){
     return a.arrivalTime < b.arrivalTime;
