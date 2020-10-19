@@ -8,12 +8,12 @@
 }*/
 
 Concert::Concert() {
-    //initLock();
-    for(int row = 0; row < 10; row++) {
-        for(int column = 0; column < 10; column++) {
-            pthread_mutex_init(locks[row][column], NULL);
-        }
-    }
+	//initLock();
+	for (auto &lock : locks) {
+		for (auto &column : lock) {
+			pthread_mutex_init(column, nullptr);
+		}
+	}
 }
 
 /*void Concert::ticket_lock() {
@@ -35,46 +35,46 @@ void Concert::ticket_unlock() {
 }*/
 
 void Concert::printSeats() {
-    for(int row = 0; row < 10; row++) {
-        for(int column = 0; column < 10; column++) {
-            if(seats[row][column] != nullptr) {
-                std::cout << seats[row][column]->id <<", ";
-            } else {
-                std:: cout << "-, ";
-            }
-        }
-        std::cout << "\n";
-    }
+	for (auto &seat : seats) {
+		for (auto &column : seat) {
+			if (column != nullptr) {
+				std::cout << column->id << ", ";
+			} else {
+				std::cout << "-, ";
+			}
+		}
+		std::cout << "\n";
+	}
 }
 
 bool Concert::allocateSeat(Customer &customer, int row) {
-    for(int i = 0; i < 10; i++) {
-        if(seats[row][i] == nullptr) {
-            if(pthread_mutex_trylock(locks[row][i]) == 0) {
-                seats[row][i] = &customer;
-                pthread_mutex_unlock(locks[row][i]);
-                printSeats();
-                return true;
-            }
-        }
-    }
-    return false;
+	for (int i = 0; i < 10; i++) {
+		if (seats[row][i] == nullptr) {
+			if (pthread_mutex_trylock(locks[row][i]) == 0) {
+				seats[row][i] = &customer;
+				pthread_mutex_unlock(locks[row][i]);
+				printSeats();
+				return true;
+			}
+		}
+	}
+	return false;
 }
 
 bool Concert::isRowFull(int row) {
-    for(int column = 0; column < 10; column++) {
-        if(seats[row][column] == nullptr) {
-            return false;
-        }
-    }
-    return true;
+	for (int column = 0; column < 10; column++) {
+		if (seats[row][column] == nullptr) {
+			return false;
+		}
+	}
+	return true;
 }
 
 bool Concert::isFull() {
-    for(int row = 0; row < 10; row++) {
-        if(!isRowFull(row)) {
-            return false;
-        }
-    } 
-    return true;
+	for (int row = 0; row < 10; row++) {
+		if (!isRowFull(row)) {
+			return false;
+		}
+	}
+	return true;
 }

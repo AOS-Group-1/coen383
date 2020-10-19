@@ -26,7 +26,7 @@ public:
 	bool isRowFull(int row);
 
 private:
-	Customer *seats[10][10] = {{nullptr}};
+	Customer        *seats[10][10] = {{nullptr}};
 	pthread_mutex_t *locks[10][10];
 	//ticket_lock_t *lock;
 };
