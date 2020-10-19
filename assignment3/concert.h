@@ -4,9 +4,7 @@
 #include "customer.h"
 
 class Concert {
-	
-	Customer *seats[10][10] {};
-	
+public:
 	pthread_mutex_t seatMutex;
 	
 	Concert();
@@ -16,7 +14,9 @@ class Concert {
 	
 	bool isFull();
 	bool isRowFull(int row);
-	
+
+private:
+	Customer *seats[10][10] = {{nullptr}};
 };
 
 #endif //ASSIGNMENT3_CONCERT_H
