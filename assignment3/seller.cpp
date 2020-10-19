@@ -58,8 +58,8 @@ void Seller::timeSlice(int time) {
 			return;
 		}
 	}
-	if (time > customer.turnaroundTime) {
-		std::cout << printTime(time) << " - " << customer.id << " completed" << std::endl;
+	if (customer.turnaroundTime > 0) {
+		std::cout << printTime(time) << " - " << this->type + std::to_string(this->id) + customer.id << " completed" << std::endl;
 		customerQueue.pop();
 	}
 }
