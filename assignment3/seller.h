@@ -11,7 +11,9 @@ public:
 	char type;
 	int  id;
 	
-	Concert concert;
+	Concert *concert;
+	
+	std::queue<Customer> eventQueue;
 	
 	Seller(char type, int id);
 	
@@ -22,9 +24,9 @@ public:
 
 private:
 	
-	std::queue<Customer> queue;
+	std::queue<Customer> customerQueue;
 	
-	bool findSeat();
+	bool findSeat(Customer &customer);
 	
 };
 

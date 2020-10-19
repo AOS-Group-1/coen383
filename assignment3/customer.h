@@ -11,11 +11,11 @@
 class Customer {
 public:
 	std::string id;
-	int         arrivalTime;
-	int         serviceTime;
-	int         responseTime;
-	int         turnaroundTime;
-	int         waitingTime;
+	int         arrivalTime = 0;
+	int         serviceTime = 0;
+	int         responseTime = 0;
+	int         turnaroundTime = 0;
+	int         waitingTime = 0;
 	
 };
 

@@ -13,7 +13,7 @@ pthread_cond_t  cond         = PTHREAD_COND_INITIALIZER;
 pthread_mutex_t mutex        = PTHREAD_MUTEX_INITIALIZER;
 int             current_time = 0;
 int             run          = 0;
-int             TIME_LIMIT   = 60;
+int             TIME_LIMIT   = 10;
 int             TOTAL_SEATS  = 100;
 
 // seller thread to serve one time slice (1 minute)
@@ -27,67 +27,24 @@ void *sell(Seller *seller_info) {
 	// while loops sells ticket while
 	// 1. time has not reached TIME_LIMIT (60) minutes
 	// 2. seats sold is not more than TOTAL_SEATS (100) seats
-	while (current_time < TIME_LIMIT /* && seats_sold < TOTAL_SEATS */) {
-		
+	while (current_time < TIME_LIMIT) {
 		pthread_mutex_lock(&mutex);
-		printf("P: %p | Type: %c | ID: %d | time: %d | run: %d\n", &seller_info, seller_info->type,
-		       seller_info->id, current_time, run);
-		run++;
-		
-		if (run % 10 == 0) {
-			current_time++;
-			pthread_cond_broadcast(&cond);
-		}
-		
-		while (run < 10) {
-			//cout << "WAITING ID : " << seller_info->id << " | CT: " << current_time << "| RUNS: " << run << endl;
-			pthread_cond_wait(&cond, &mutex);
-		}
-		
-		//run = 0;
-		pthread_mutex_unlock(&mutex);
-		
-		
+		pthread_cond_wait(&cond, &mutex);
+		cout << "ID: " << seller_info->type << seller_info->id << " | time: " << current_time
+		     << endl;
 		
 		// TODO: Serve any buyer available in this seller queue that is ready
 		// now to buy ticket till done with all relevant buyers in their queue
 		
-		// HIGH SELLER
-		if (seller_info->type == 'H') {
-			// if buyer in high seller queue
-			if (!seller_info->queue.empty()) {
-				// sell ticket to buyer in high queue
-				
-				
-				// update current_time (generate random time [1,2] minutes)
-				current_time = current_time + (rand() % 2) + 1;
-			}
+		if (seller_info->eventQueue.front().arrivalTime >= current_time) {
+			seller_info->customerArrives(seller_info->eventQueue.front());
+			seller_info->eventQueue.pop();
 		}
-			// MEDIUM SELLER
-		else if (seller_info->type == 'M') {
-			if (!seller_info->queue.empty()) {
-				// sell ticket to buyer in medium queues
-				
-				
-				// update current_time (generate random time [2,4] minutes)
-				current_time = current_time + (rand() % 3) + 2;
-			}
-		}
-			// LOW SELLER
-		else {
-			// if buyer in low seller queue
-			if (!seller_info->queue.empty()) {
-				// sell ticket to buyer in low queues
-				
-				
-				// update current_time (generate random time [4,7] minutes)
-				current_time = current_time + (rand() % 4) + 4;
-			}
-		}
-		
+		seller_info->timeSlice(current_time);
+		pthread_mutex_unlock(&mutex);
 	}
 	
-	return NULL; // thread exits
+	return nullptr; // thread exits
 }
 
 void wakeup_all_seller_threads() {
@@ -98,9 +55,8 @@ void wakeup_all_seller_threads() {
 
 int main(int argc, char **argv) {
 	
-	int seed = time(NULL);
+	int seed = time(nullptr);
 	srand(seed);
-	srand(0);
 	
 	// N : Customers to server
 	int n = 10;
@@ -117,30 +73,33 @@ int main(int argc, char **argv) {
 	// Create 10 threads representing the 10 sellers.
 	
 	seller_type = 'H';
-	Seller *s = new Seller{seller_type, 0};
-	generate_customers(n, s->queue, seller_type);
-	
-	pthread_create(&tids[0], NULL, (void *(*)(void *)) sell, s);
+	auto s = new Seller{seller_type, 0};
+	generate_customers(n, s->eventQueue, seller_type);
+	pthread_create(&tids[0], nullptr, (void *(*)(void *)) sell, s);
 	
 	seller_type = 'M';
 	for (int i = 1; i < 4; i++) {
-		Seller *s = new Seller{seller_type, i};
-		generate_customers(n, s->queue, seller_type);
-		pthread_create(&tids[i], NULL, (void *(*)(void *)) sell, s);
+		auto s = new Seller{seller_type, i};
+		generate_customers(n, s->eventQueue, seller_type);
+		pthread_create(&tids[i], nullptr, (void *(*)(void *)) sell, s);
 	}
 	
 	seller_type = 'L';
 	for (int i = 4; i < 10; i++) {
-		Seller *s = new Seller{seller_type, i};
-		generate_customers(n, s->queue, seller_type);
-		pthread_create(&tids[i], NULL, (void *(*)(void *)) sell, s);
+		auto s = new Seller{seller_type, i};
+		generate_customers(n, s->eventQueue, seller_type);
+		pthread_create(&tids[i], nullptr, (void *(*)(void *)) sell, s);
+	}
+	usleep(10000);
+	// wakeup all seller threads
+	for (current_time = 0; current_time < TIME_LIMIT; current_time++) {
+		usleep(10000);
+		wakeup_all_seller_threads();
 	}
 	
-	// wakeup all seller threads
-	wakeup_all_seller_threads();
 	// wait for all seller threads to exit
-	for (auto & tid : tids)
-		pthread_join(tid, NULL);
+	for (auto &tid : tids)
+		pthread_join(tid, nullptr);
 	
 	// TODO: Printout simulation results
 	exit(0);

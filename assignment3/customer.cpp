@@ -10,7 +10,7 @@ void generate_customers(int n, std::queue<Customer> &customers_queue, char custo
 	if (customer_type == 'H')
 		for (int          i = 0; i < n; ++i) {
 			Customer c;
-			c.id             = "H";
+			c.id             = std::to_string(i);
 			c.arrivalTime    = rand() % 60;
 			c.serviceTime    = rand() % 2 + 1;
 			c.responseTime   = 0;
