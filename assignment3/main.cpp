@@ -36,7 +36,7 @@ void *sell(Seller *seller_info) {
 		// TODO: Serve any buyer available in this seller queue that is ready
 		// now to buy ticket till done with all relevant buyers in their queue
 		
-		if (seller_info->eventQueue.front().arrivalTime >= current_time) {
+		if (seller_info->eventQueue.front().arrivalTime <= current_time) {
 			seller_info->customerArrives(seller_info->eventQueue.front());
 			seller_info->eventQueue.pop();
 		}
