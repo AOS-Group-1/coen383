@@ -5,7 +5,7 @@
 
 class Concert {
 	
-	Customer *seats[10][10];
+	Customer *seats[10][10] {};
 	
 	pthread_mutex_t seatMutex;
 	
