@@ -1,20 +1,64 @@
 #include "concert.h"
 #include <pthread.h>
+#include <iostream>
+
+/*void Concert::initLock() {
+    lock->cond = PTHREAD_COND_INITIALIZER;
+    lock->mutex = PTHREAD_MUTEX_INITIALIZER;
+}*/
 
 Concert::Concert() {
-    Concert::seatMutex = PTHREAD_MUTEX_INITIALIZER;
+    //initLock();
+    for(int row = 0; row < 10; row++) {
+        for(int column = 0; column < 10; column++) {
+            pthread_mutex_init(locks[row][column], NULL);
+        }
+    }
 }
 
-bool Concert::allocateSeat(Customer &customer, int row, int column) {
-    pthread_mutex_lock(&seatMutex);
-    //check if seat is filled after you get the lock
-    if(seats[row][column] != nullptr) {
-        pthread_mutex_unlock(&seatMutex);
-        return false;
+/*void Concert::ticket_lock() {
+    unsigned long queue;
+
+    pthread_mutex_lock(&lock->mutex);
+    queue = lock->queue_tail++;
+    while(queue != lock->queue_head) {
+        pthread_cond_wait(&lock->cond, &lock->mutex);
     }
-    seats[row][column] = &customer;
-    pthread_mutex_unlock(&seatMutex);
-    return true;
+    pthread_mutex_unlock(&lock->mutex);
+}
+
+void Concert::ticket_unlock() {
+    pthread_mutex_lock(&lock->mutex);
+    lock->queue_head++;
+    pthread_cond_broadcast(&lock->cond);
+    pthread_mutex_unlock(&lock->mutex);
+}*/
+
+void Concert::printSeats() {
+    for(int row = 0; row < 10; row++) {
+        for(int column = 0; column < 10; column++) {
+            if(seats[row][column] != nullptr) {
+                std::cout << seats[row][column]->id <<", ";
+            } else {
+                std:: cout << "-, ";
+            }
+        }
+        std::cout << "\n";
+    }
+}
+
+bool Concert::allocateSeat(Customer &customer, int row) {
+    for(int i = 0; i < 10; i++) {
+        if(seats[row][i] == nullptr) {
+            if(pthread_mutex_trylock(locks[row][i]) == 0) {
+                seats[row][i] = &customer;
+                pthread_mutex_unlock(locks[row][i]);
+                printSeats();
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 bool Concert::isRowFull(int row) {
