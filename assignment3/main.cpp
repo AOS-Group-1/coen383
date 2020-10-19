@@ -9,11 +9,13 @@
 
 using namespace std;
 
+Concert *Concert::instance = 0;
+
 pthread_cond_t  cond         = PTHREAD_COND_INITIALIZER;
 pthread_mutex_t mutex        = PTHREAD_MUTEX_INITIALIZER;
 int             current_time = 0;
 int             run          = 0;
-int             TIME_LIMIT   = 10;
+int             TIME_LIMIT   = 3;
 int             TOTAL_SEATS  = 100;
 
 // seller thread to serve one time slice (1 minute)
@@ -30,8 +32,8 @@ void *sell(Seller *seller_info) {
 	while (current_time < TIME_LIMIT) {
 		pthread_mutex_lock(&mutex);
 		pthread_cond_wait(&cond, &mutex);
-		cout << "ID: " << seller_info->type << seller_info->id << " | time: " << current_time
-		     << endl;
+//		cout << "ID: " << seller_info->type << seller_info->id << " | time: " << current_time
+//		     << endl;
 		
 		// TODO: Serve any buyer available in this seller queue that is ready
 		// now to buy ticket till done with all relevant buyers in their queue

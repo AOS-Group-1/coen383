@@ -4,13 +4,13 @@ bool cmp(Customer a, Customer b) {
 	return a.arrivalTime < b.arrivalTime;
 }
 
-void generate_customers(int n, std::queue<Customer> &customers_queue, char customer_type) {
+void generate_customers(int n, std::queue<Customer> &eventQueue, char customer_type) {
 	std::vector<Customer> array;
 	// H-Customers
 	if (customer_type == 'H')
 		for (int          i = 0; i < n; ++i) {
 			Customer c;
-			c.id             = std::to_string(i);
+            c.id             = "";
 			c.arrivalTime    = rand() % 60;
 			c.serviceTime    = rand() % 2 + 1;
 			c.responseTime   = 0;
@@ -22,7 +22,7 @@ void generate_customers(int n, std::queue<Customer> &customers_queue, char custo
 	if (customer_type == 'M')
 		for (int          i = 0; i < n; ++i) {
 			Customer c;
-			c.id             = "M";
+            c.id             = "";
 			c.arrivalTime    = rand() % 60;
 			c.serviceTime    = rand() % 3 + 2;
 			c.responseTime   = 0;
@@ -34,7 +34,7 @@ void generate_customers(int n, std::queue<Customer> &customers_queue, char custo
 	if (customer_type == 'L')
 		for (int          i = 0; i < n; ++i) {
 			Customer c;
-			c.id             = "L";
+            c.id             = "";
 			c.arrivalTime    = rand() % 60;
 			c.serviceTime    = rand() % 4 + 4;
 			c.responseTime   = 0;
@@ -43,8 +43,15 @@ void generate_customers(int n, std::queue<Customer> &customers_queue, char custo
 			array.push_back(c);
 		}
 	std::sort(array.begin(), array.end(), cmp);
+
+    int x = 0;
+    std::string prefix = "";
+    if(n <= 10)
+        prefix = "0";
+
 	for (auto i : array) {
-		customers_queue.push(i);
+	    i.id = prefix + std::to_string(x++);
+		eventQueue.push(i);
 	}
 }
 

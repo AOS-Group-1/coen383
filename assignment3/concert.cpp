@@ -8,10 +8,20 @@
 }*/
 
 Concert::Concert() {
+
+    for(auto &row : seats)
+        for(auto &col : row){
+            col = new Seat;
+            col->assigned = false;
+            col->customer = new Customer;
+        }
+
+
+
 	//initLock();
 	for (auto &lock : locks) {
 		for (auto &column : lock) {
-			pthread_mutex_init(column, nullptr);
+			pthread_mutex_init(&column, NULL);
 		}
 	}
 }
@@ -37,8 +47,8 @@ void Concert::ticket_unlock() {
 void Concert::printSeats() {
 	for (auto &seat : seats) {
 		for (auto &column : seat) {
-			if (column != nullptr) {
-				std::cout << column->id << ", ";
+			if (column->assigned == true) {
+				std::cout << column->customer->id << ", ";
 			} else {
 				std::cout << "-, ";
 			}
@@ -49,11 +59,12 @@ void Concert::printSeats() {
 
 bool Concert::allocateSeat(Customer &customer, int row) {
 	for (int i = 0; i < 10; i++) {
-		if (seats[row][i] == nullptr) {
-			if (pthread_mutex_trylock(locks[row][i]) == 0) {
-				seats[row][i] = &customer;
-				pthread_mutex_unlock(locks[row][i]);
-				printSeats();
+		if (seats[row][i]->assigned == false) {
+			if (pthread_mutex_trylock(&locks[row][i]) == 0) {
+				seats[row][i]->customer = &customer;
+                seats[row][i]->assigned = true;
+				pthread_mutex_unlock(&locks[row][i]);
+				//printSeats();
 				return true;
 			}
 		}

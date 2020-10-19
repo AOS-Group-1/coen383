@@ -4,6 +4,7 @@
 Seller::Seller(char type, int id) {
 	this->type = type;
 	this->id   = id;
+	this->concert = concert->getInstance();
 }
 
 std::string printTime(int time) {
@@ -14,7 +15,7 @@ std::string printTime(int time) {
 }
 
 void Seller::customerArrives(Customer &customer) {
-	std::cout << printTime(customer.arrivalTime) << " - " << customer.id << " arrived" << std::endl;
+	std::cout << printTime(customer.arrivalTime) << " - " << this->type + std::to_string(this->id) + customer.id << " arrived" << std::endl;
 	customerQueue.push(customer);
 }
 
@@ -46,13 +47,13 @@ void Seller::timeSlice(int time) {
 	if (customerQueue.empty()) return;
 	Customer customer = customerQueue.front();
 	if (customer.responseTime == 0 && customer.turnaroundTime == 0) {
-		std::cout << printTime(time) << " - " << customer.id << " served" << std::endl;
+		std::cout << printTime(time) << " - " << this->type + std::to_string(this->id) + customer.id << " served" << std::endl;
 		customer.responseTime = time;
 		
 		if (findSeat(customer)) {
 			customer.turnaroundTime = time + customer.serviceTime;
 		} else {
-			std::cout << printTime(time) << " - " << customer.id << " rejected" << std::endl;
+			std::cout << printTime(time) << " - " << this->type + std::to_string(this->id) + customer.id << " rejected" << std::endl;
 			customerQueue.pop();
 			return;
 		}

@@ -20,6 +20,6 @@ public:
 };
 
 bool cmp(Customer a, Customer b);
-void generate_customers(int n, std::queue<Customer> &customers_queue, char customer_type);
+void generate_customers(int n, std::queue<Customer> &eventQueue, char customer_type);
 
 #endif //ASSIGNMENT3_CUSTOMER_H
