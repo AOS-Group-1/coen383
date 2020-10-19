@@ -18,25 +18,38 @@ void Seller::customerArrives(Customer &customer) {
 	queue.push(customer);
 }
 
+bool Seller::findSeat() {
+	switch (this->type) {
+		case 'H': {
+			int       order[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+			for (auto &i : order)
+				if (concert.allocateSeat(*this, i)) return true;
+			break;
+		}
+		case 'M': {
+			int       order[] = {5, 6, 4, 7, 3, 8, 2, 9, 1, 0};
+			for (auto &i : order)
+				if (concert.allocateSeat(*this, i)) return true;
+			break;
+		}
+		case 'L': {
+			int       order[] = {9, 8, 7, 6, 5, 4, 3, 2, 1, 0};
+			for (auto &i : order)
+				if (concert.allocateSeat(*this, i)) return true;
+			break;
+		}
+	}
+	return false;
+}
+
 void Seller::timeSlice(int time) {
 	if (queue.empty()) return;
 	Customer customer = queue.front();
 	if (customer.responseTime == 0 && customer.turnaroundTime == 0) {
-		bool result;
-		switch (this->type) {
-			case 'H':
-				result = concert.allocateSeat(*this, 1);
-				break;
-			case 'M':
-				result = concert.allocateSeat(*this, 5);
-				break;
-			case 'L':
-				result = concert.allocateSeat(*this, 10);
-				break;
-		}
 		std::cout << printTime(time) << " - " << customer.id << " served" << std::endl;
 		customer.responseTime = time;
-		if (result) {
+		
+		if (findSeat()) {
 			customer.turnaroundTime = time + customer.serviceTime;
 		} else {
 			queue.pop();

@@ -24,6 +24,8 @@ private:
 	
 	std::queue<Customer> queue;
 	
+	bool findSeat();
+	
 };
 
 #endif //ASSIGNMENT3_SELLER_H
