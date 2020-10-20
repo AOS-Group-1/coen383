@@ -72,10 +72,14 @@ void Concert::printStats(int n, int time){
     }
 
     printf("*******************************************************************************************\n");
-    printf("| Seller | # Accepted | # Rejected | Average RT | Average TT | Average WT | Throughput |\n");
-    printf("| H | %d | %d | %f | %f | %f | %f |\n", accepted_H, n-accepted_H, art_H/accepted_H, att_H/accepted_H, awt_H/accepted_H, accepted_H/time);
-    printf("| M | %d | %d | %f | %f | %f | %f |\n", accepted_M, (3*n)-accepted_M, art_M/accepted_M, att_M/accepted_M, awt_M/accepted_H, accepted_M/time);
-    printf("| L | %d | %d | %f | %f | %f | %f |\n", accepted_L, (6*n)-accepted_L, art_L/accepted_L, att_L/accepted_L, awt_L/accepted_L, accepted_L/time);
+    printf("| Sellers | # Accepted | # Rejected | Average RT | Average TT | Average WT | Throughput |\n");
+    printf("*******************************************************************************************\n");
+    printf("    H           %d           %d         %.2f         %.2f         %.2f         %.2f \n",
+           accepted_H, n-accepted_H, art_H/accepted_H, att_H/accepted_H, awt_H/accepted_H, accepted_H/time);
+    printf("    H           %d           %d         %.2f         %.2f         %.2f         %.2f \n",
+           accepted_M, (3*n)-accepted_M, art_M/accepted_M, att_M/accepted_M, awt_M/accepted_H, accepted_M/time);
+    printf("    H           %d           %d         %.2f         %.2f         %.2f         %.2f \n",
+           accepted_L, (6*n)-accepted_L, art_L/accepted_L, att_L/accepted_L, awt_L/accepted_L, accepted_L/time);
     printf("*******************************************************************************************\n");
 }
 
