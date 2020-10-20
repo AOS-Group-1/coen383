@@ -52,7 +52,7 @@ int main(int argc, char **argv) {
 	// N : Customers to serve
 	int n = 10;
 	if (argc > 1) {
-		n = atoi(argv[1]);
+		n = stoi(argv[1]);
 	}
 	
 	pthread_t tids[10];
