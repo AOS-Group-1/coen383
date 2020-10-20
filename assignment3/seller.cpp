@@ -50,14 +50,14 @@ void Seller::timeSlice(int time) {
 		customer->responseTime = time;
 		if (findSeat(customer)) {
 			std::cout << printTime(time) << " - " << customer->id << " served" << std::endl;
-			customer->turnaroundTime = time + customer->serviceTime;
+			customer->turnaroundTime = time + customer->serviceTime - 1;
 		} else {
 			std::cout << printTime(time) << " - " << customer->id << " rejected" << std::endl;
 			customerQueue.pop();
 			return;
 		}
 	}
-	if (time > customer->turnaroundTime) {
+	if (time >= customer->turnaroundTime) {
 		std::cout << printTime(time) << " - " << customer->id << " completed" << std::endl;
 		customerQueue.pop();
 	}

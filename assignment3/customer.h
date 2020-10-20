@@ -17,6 +17,6 @@ public:
 };
 
 bool cmp(Customer *a, Customer *b);
-void generate_customers(int n, Seller *seller, char customer_type);
+void generate_customers(int n, Seller *seller);
 
 #endif //ASSIGNMENT3_CUSTOMER_H

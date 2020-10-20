@@ -9,7 +9,7 @@ Concert::Concert() {
 		for (auto &col : row) {
 			col = new Seat;
 			col->assigned = false;
-			col->customer = new Customer;
+			col->customer = nullptr;
 		}
 	
 	//initLock();
@@ -21,16 +21,19 @@ Concert::Concert() {
 }
 
 void Concert::printSeats() {
-	for (auto &seat : seats) {
-		for (auto &column : seat) {
-			if (column->assigned) {
-				std::cout << column->customer->id << ", ";
+	std::cout << "************************************************************\n";
+	for (int row = 0; row < 10; row++) {
+		for (int col = 0; col < 10; col++) {
+			auto seat = seats[row][col];
+			if (seat->assigned) {
+				std::cout << "|" << seat->customer->id << "|";
 			} else {
-				std::cout << "-, ";
+				std::cout << "|----|";
 			}
 		}
 		std::cout << "\n";
 	}
+	std::cout << "************************************************************\n";
 }
 
 bool Concert::allocateSeat(Customer *customer, int row) {

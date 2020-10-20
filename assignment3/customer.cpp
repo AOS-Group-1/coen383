@@ -1,6 +1,7 @@
 #include <vector>
 #include <algorithm>
 #include <cstdlib>
+#include <iostream>
 #include "customer.h"
 #include "seller.h"
 
@@ -8,11 +9,10 @@ bool cmp(Customer *a, Customer *b) {
 	return a->arrivalTime < b->arrivalTime;
 }
 
-void generate_customers(int n, Seller *seller, char customer_type) {
-	
+void generate_customers(int n, Seller *seller) {
 	std::vector<Customer *> array;
 	// H-Customers
-	if (customer_type == 'H')
+	if (seller->type == 'H')
 		for (int            i = 0; i < n; ++i) {
 			auto c = new Customer();
 			c->id          = seller->type + std::to_string(seller->id);
@@ -21,7 +21,7 @@ void generate_customers(int n, Seller *seller, char customer_type) {
 			array.push_back(c);
 		}
 	// M-Customers
-	if (customer_type == 'M')
+	if (seller->type == 'M')
 		for (int            i = 0; i < n; ++i) {
 			auto c         = new Customer();
 			c->id          = seller->type + std::to_string(seller->id);
@@ -30,7 +30,7 @@ void generate_customers(int n, Seller *seller, char customer_type) {
 			array.push_back(c);
 		}
 	// L-Customers
-	if (customer_type == 'L')
+	if (seller->type == 'L')
 		for (int            i = 0; i < n; ++i) {
 			auto c         = new Customer();
 			c->id          = seller->type + std::to_string(seller->id);
@@ -45,9 +45,10 @@ void generate_customers(int n, Seller *seller, char customer_type) {
 	if (n <= 10)
 		prefix = "0";
 	
-	for (auto i : array) {
-		i->id += prefix + std::to_string(x++);
-		seller->eventQueue.push(i);
+	for (auto c : array) {
+		c->id += prefix + std::to_string(x++);
+		std::cout << c->id << ": " << c->arrivalTime << ", " << c->serviceTime << std::endl;
+		seller->eventQueue.push(c);
 	}
 }
 
