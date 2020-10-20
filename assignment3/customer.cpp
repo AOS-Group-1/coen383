@@ -12,7 +12,7 @@ void generate_customers(int n, Seller *seller) {
 	
 	// H-Customers
 	if (seller->type == 'H')
-		for (int i = 0; i < n; ++i) {
+		for (int i = 1; i <= n; ++i) {
 			auto c = new Customer();
 			c->id          = seller->type + std::to_string(seller->id);
 			c->arrivalTime = rand() % 60;
@@ -21,7 +21,7 @@ void generate_customers(int n, Seller *seller) {
 		}
 	// M-Customers
 	if (seller->type == 'M')
-		for (int i = 0; i < n; ++i) {
+		for (int i = 1; i <= n; ++i) {
 			auto c         = new Customer();
 			c->id          = seller->type + std::to_string(seller->id);
 			c->arrivalTime = rand() % 60;
@@ -31,7 +31,7 @@ void generate_customers(int n, Seller *seller) {
 	
 	// L-Customers
 	if (seller->type == 'L')
-		for (int i = 0; i < n; ++i) {
+		for (int i = 1; i <= n; ++i) {
 			auto c = new Customer();
 			c->id          = seller->type + std::to_string(seller->id);
 			c->arrivalTime = rand() % 60;
