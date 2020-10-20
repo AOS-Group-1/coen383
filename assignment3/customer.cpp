@@ -10,34 +10,38 @@ bool cmp(Customer *a, Customer *b) {
 void generate_customers(int n, Seller *seller) {
 	std::vector<Customer *> array;
 	
-	// H-Customers
-	if (seller->type == 'H')
-		for (int i = 1; i <= n; ++i) {
-			auto c = new Customer;
-			c->id          = seller->type + std::to_string(seller->id);
-			c->arrivalTime = rand() % 60;
-			c->serviceTime = rand() % 2 + 1;
-			array.push_back(c);
-		}
-	// M-Customers
-	if (seller->type == 'M')
-		for (int i = 1; i <= n; ++i) {
-			auto c         = new Customer;
-			c->id          = seller->type + std::to_string(seller->id);
-			c->arrivalTime = rand() % 60;
-			c->serviceTime = rand() % 3 + 2;
-			array.push_back(c);
-		}
-	
-	// L-Customers
-	if (seller->type == 'L')
-		for (int i = 1; i <= n; ++i) {
-			auto c = new Customer;
-			c->id          = seller->type + std::to_string(seller->id);
-			c->arrivalTime = rand() % 60;
-			c->serviceTime = rand() % 4 + 4;
-			array.push_back(c);
-		}
+	switch (seller->type) {
+		case 'H':
+			// H-Customers
+			for (int i = 1; i <= n; ++i) {
+				auto c = new Customer;
+				c->id          = seller->type + std::to_string(seller->id);
+				c->arrivalTime = rand() % 60;
+				c->serviceTime = rand() % 2 + 1;
+				array.push_back(c);
+			}
+			break;
+		case 'M':
+			// M-Customers
+			for (int i = 1; i <= n; ++i) {
+				auto c = new Customer;
+				c->id          = seller->type + std::to_string(seller->id);
+				c->arrivalTime = rand() % 60;
+				c->serviceTime = rand() % 3 + 2;
+				array.push_back(c);
+			}
+			break;
+		case 'L':
+			// L-Customers
+			for (int i = 1; i <= n; ++i) {
+				auto c = new Customer;
+				c->id          = seller->type + std::to_string(seller->id);
+				c->arrivalTime = rand() % 60;
+				c->serviceTime = rand() % 4 + 4;
+				array.push_back(c);
+			}
+			break;
+	}
 	std::sort(array.begin(), array.end(), cmp);
 	
 	int       x = 0;

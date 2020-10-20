@@ -19,7 +19,7 @@ void Seller::customerArrives(Customer *customer, int time) {
 }
 
 bool Seller::findSeat(Customer *customer) const {
-	switch (this->type) {
+	switch (type) {
 		case 'H': {
 			int       order[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 			for (auto &i : order)
