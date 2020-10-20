@@ -2,24 +2,21 @@
 #define ASSIGNMENT3_CUSTOMER_H
 
 #include <string>
-#include <vector>
-#include <algorithm>
-#include <queue>
-#include <stdlib.h>
-#include <time.h>
+
+class Seller;
 
 class Customer {
 public:
 	std::string id;
-	int         arrivalTime = 0;
-	int         serviceTime = 0;
-	int         responseTime = 0;
-	int         turnaroundTime = 0;
-	int         waitingTime = 0;
+	int         arrivalTime    = 0;
+	int         serviceTime    = 0;
+	int         responseTime   = -1;
+	int         turnaroundTime = -1;
+	int         waitingTime    = -1;
 	
 };
 
-bool cmp(Customer a, Customer b);
-void generate_customers(int n, std::queue<Customer> &eventQueue, char customer_type);
+bool cmp(Customer *a, Customer *b);
+void generate_customers(int n, Seller *seller, char customer_type);
 
 #endif //ASSIGNMENT3_CUSTOMER_H

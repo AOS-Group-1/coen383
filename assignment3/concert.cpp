@@ -2,73 +2,45 @@
 #include <pthread.h>
 #include <iostream>
 
-/*void Concert::initLock() {
-    lock->cond = PTHREAD_COND_INITIALIZER;
-    lock->mutex = PTHREAD_MUTEX_INITIALIZER;
-}*/
+Concert *Concert::instance = nullptr;
 
 Concert::Concert() {
-
-    for(auto &row : seats)
-        for(auto &col : row){
-            col = new Seat;
-            col->assigned = false;
-            //col.customer = new Customer;
-        }
-
-
-
+	for (auto &row : seats)
+		for (auto &col : row) {
+			col = new Seat;
+			col->assigned = false;
+			col->customer = new Customer;
+		}
+	
 	//initLock();
 	for (auto &lock : locks) {
 		for (auto &column : lock) {
-			pthread_mutex_init(&column, NULL);
+			pthread_mutex_init(&column, nullptr);
 		}
 	}
 }
 
-/*void Concert::ticket_lock() {
-    unsigned long queue;
-
-    pthread_mutex_lock(&lock->mutex);
-    queue = lock->queue_tail++;
-    while(queue != lock->queue_head) {
-        pthread_cond_wait(&lock->cond, &lock->mutex);
-    }
-    pthread_mutex_unlock(&lock->mutex);
-}
-
-void Concert::ticket_unlock() {
-    pthread_mutex_lock(&lock->mutex);
-    lock->queue_head++;
-    pthread_cond_broadcast(&lock->cond);
-    pthread_mutex_unlock(&lock->mutex);
-}*/
-
 void Concert::printSeats() {
-    std::cout << "************************************************************\n";
-    for(int row = 0; row < 10; row++){
-        for(int col = 0; col < 10; col++){
-            auto seat = seats[row][col];
-            if(seat->assigned == true){
-                std::cout << "|" << seat->seller + seat->customer.id << "|";
-            }
-            else{
-                std::cout << "|----|";
-            }
-        }
-        std::cout << "\n";
-    }
-    std::cout << "************************************************************\n";
+	for (auto &seat : seats) {
+		for (auto &column : seat) {
+			if (column->assigned) {
+				std::cout << column->customer->id << ", ";
+			} else {
+				std::cout << "-, ";
+			}
+		}
+		std::cout << "\n";
+	}
 }
 
-bool Concert::allocateSeat(Customer &customer, Seller *seller, int row) {
+bool Concert::allocateSeat(Customer *customer, int row) {
 	for (int i = 0; i < 10; i++) {
-		if (seats[row][i]->assigned == false) {
+		if (!seats[row][i]->assigned) {
 			if (pthread_mutex_trylock(&locks[row][i]) == 0) {
 				seats[row][i]->customer = customer;
-                seats[row][i]->assigned = true;
-                seats[row][i]->seller = seller->type + std::to_string(seller->id);
+				seats[row][i]->assigned = true;
 				pthread_mutex_unlock(&locks[row][i]);
+				//printSeats();
 				return true;
 			}
 		}

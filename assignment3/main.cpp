@@ -1,48 +1,40 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <time.h>
+#include <cstdlib>
+#include <cstdio>
+#include <ctime>
 #include <pthread.h>
 #include <iostream>
 #include "customer.h"
 #include "seller.h"
 #include "unistd.h"
+#include <algorithm>
 
 using namespace std;
 
-Concert *Concert::instance = 0;
+pthread_cond_t  cond        = PTHREAD_COND_INITIALIZER;
+pthread_mutex_t mutex       = PTHREAD_MUTEX_INITIALIZER;
+int             currentTime = 0;
 
-pthread_cond_t  cond         = PTHREAD_COND_INITIALIZER;
-pthread_mutex_t mutex        = PTHREAD_MUTEX_INITIALIZER;
-int             current_time = 0;
-int             run          = 0;
-int             TIME_LIMIT   = 3;
-int             TOTAL_SEATS  = 100;
+#define TIME_LIMIT  60
+#define TOTAL_SEATS 100
 
 // seller thread to serve one time slice (1 minute)
 void *sell(Seller *seller_info) {
 	
-	//pthread_mutex_lock(&mutex);
-	//pthread_cond_wait(&cond, &mutex);
-	//pthread_mutex_unlock(&mutex);
-	
-	
-	// while loops sells ticket while
-	// 1. time has not reached TIME_LIMIT (60) minutes
-	// 2. seats sold is not more than TOTAL_SEATS (100) seats
-	while (current_time < TIME_LIMIT) {
+	// while loops sells ticket while time has not reached TIME_LIMIT (60) minutes
+	while (currentTime < TIME_LIMIT) {
 		pthread_mutex_lock(&mutex);
 		pthread_cond_wait(&cond, &mutex);
-//		cout << "ID: " << seller_info->type << seller_info->id << " | time: " << current_time
+//		cout << "ID: " << seller_info->type << seller_info->id << " | time: " << currentTime
 //		     << endl;
 		
 		// TODO: Serve any buyer available in this seller queue that is ready
 		// now to buy ticket till done with all relevant buyers in their queue
 		
-		if (seller_info->eventQueue.front().arrivalTime <= current_time) {
+		if (seller_info->eventQueue.front()->arrivalTime <= currentTime) {
 			seller_info->customerArrives(seller_info->eventQueue.front());
 			seller_info->eventQueue.pop();
 		}
-		seller_info->timeSlice(current_time);
+		seller_info->timeSlice(currentTime - 1);
 		pthread_mutex_unlock(&mutex);
 	}
 	
@@ -66,7 +58,6 @@ int main(int argc, char **argv) {
 		n = atoi(argv[1]);
 	}
 	
-	
 	pthread_t tids[10];
 	char      seller_type;
 	// Create necessary data structures for the simulator.
@@ -76,29 +67,27 @@ int main(int argc, char **argv) {
 	
 	seller_type = 'H';
 	auto s = new Seller{seller_type, 0};
-	generate_customers(n, s->eventQueue, seller_type);
+	generate_customers(n, s, seller_type);
 	pthread_create(&tids[0], nullptr, (void *(*)(void *)) sell, s);
 	
 	seller_type = 'M';
 	for (int i = 1; i < 4; i++) {
-		auto s = new Seller{seller_type, i-1};
-		generate_customers(n, s->eventQueue, seller_type);
+		auto s = new Seller{seller_type, i};
+		generate_customers(n, s, seller_type);
 		pthread_create(&tids[i], nullptr, (void *(*)(void *)) sell, s);
 	}
 	
 	seller_type = 'L';
 	for (int i = 4; i < 10; i++) {
-		auto s = new Seller{seller_type, i-4};
-		generate_customers(n, s->eventQueue, seller_type);
+		auto s = new Seller{seller_type, i};
+		generate_customers(n, s, seller_type);
 		pthread_create(&tids[i], nullptr, (void *(*)(void *)) sell, s);
 	}
-	sleep(1);
+	usleep(10000);
 	// wakeup all seller threads
-	for (current_time = 0; current_time < TIME_LIMIT; current_time++) {
-		sleep(1);
+	for (currentTime = 0; currentTime < TIME_LIMIT; currentTime++) {
+		usleep(10000);
 		wakeup_all_seller_threads();
-        sleep(1);
-		Concert::getInstance()->printSeats();
 	}
 	
 	// wait for all seller threads to exit

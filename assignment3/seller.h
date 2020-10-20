@@ -5,30 +5,26 @@
 #include "customer.h"
 #include "concert.h"
 
-class Concert;
-
 class Seller {
 public:
 	
 	char type;
 	int  id;
 	
-	Concert *concert;
-	
-	std::queue<Customer> eventQueue;
+	std::queue<Customer *> eventQueue;
 	
 	Seller(char type, int id);
 	
-	void customerArrives(Customer &customer);
+	void customerArrives(Customer *customer);
 	
 	// print events that happen during the time slice
 	void timeSlice(int time);
 
 private:
 	
-	std::queue<Customer> customerQueue;
+	std::queue<Customer *> customerQueue;
 	
-	bool findSeat(Customer &customer, Seller *seller);
+	bool findSeat(Customer *customer);
 	
 };
 
