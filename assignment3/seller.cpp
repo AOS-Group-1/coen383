@@ -14,8 +14,8 @@ std::string printTime(int time) {
 }
 
 void Seller::customerArrives(Customer *customer) {
-	std::cout << printTime(customer->arrivalTime) << " - " << customer->id << " arrived"
-	          << std::endl;
+	std::cout << printTime(customer->arrivalTime) << " - "
+	          << customer->id << " arrived" << std::endl;
 	customerQueue.push(customer);
 }
 

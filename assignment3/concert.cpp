@@ -1,6 +1,5 @@
-#include "concert.h"
-#include <pthread.h>
 #include <iostream>
+#include "concert.h"
 
 Concert *Concert::instance = nullptr;
 

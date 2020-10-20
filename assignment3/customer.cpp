@@ -1,7 +1,5 @@
-#include <vector>
-#include <algorithm>
-#include <cstdlib>
 #include <iostream>
+#include <algorithm>
 #include "customer.h"
 #include "seller.h"
 
