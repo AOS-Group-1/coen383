@@ -29,6 +29,7 @@ public:
 	bool allocateSeat(Customer *customer, int row);
 	
 	void printSeats();
+	void printStats(int n, int time);
 	
 	bool isFull();
 	bool isRowFull(int row);

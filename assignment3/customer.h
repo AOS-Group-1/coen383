@@ -8,6 +8,7 @@ class Seller;
 class Customer {
 public:
 	std::string id;
+    std::string seller;
 	int         arrivalTime    = 0;
 	int         serviceTime    = 0;
 	int         responseTime   = -1;

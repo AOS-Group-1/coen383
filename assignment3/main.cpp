@@ -18,7 +18,7 @@ void *sell(Seller *seller) {
 	
 	// while loops sells ticket while time has not reached TIME_LIMIT (60) minutes
 	while (currentTime < TIME_LIMIT * 2) {
-		pthread_mutex_lock(&mutex);
+        pthread_mutex_lock(&mutex);
 		pthread_cond_wait(&cond, &mutex);
 //		cout << "ID: " << seller->type << seller->id << " | time: " << currentTime << endl;
 		
@@ -49,10 +49,10 @@ void wakeup_all_seller_threads() {
 int main(int argc, char **argv) {
 	
 	int seed = time(nullptr);
-//	srand(seed);
+	srand(seed);
 	
 	// N : Customers to serve
-	int n = 5;
+	int n = 10;
 	if (argc > 1) {
 		n = atoi(argv[1]);
 	}
@@ -79,8 +79,8 @@ int main(int argc, char **argv) {
 	}
 	
 	seller_type = 'L';
-	for (int i = 1; i < 7; i++) {
-		auto s = new Seller{seller_type, i};
+	for (int i = 4; i < 10; i++) {
+		auto s = new Seller{seller_type, i-3};
 		generate_customers(n, s);
 		pthread_create(&tids[i], nullptr, (void *(*)(void *)) sell, s);
 	}
@@ -99,6 +99,7 @@ int main(int argc, char **argv) {
 //	customer->responseTime -= customer->arrivalTime;
 //	customer->turnaroundTime = time - customer->arrivalTime;
 	Concert::getInstance()->printSeats();
+	Concert::getInstance()->printStats(n,currentTime);
 	// TODO: Printout simulation results
 	exit(0);
 }

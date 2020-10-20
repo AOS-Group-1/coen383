@@ -15,6 +15,7 @@ void generate_customers(int n, Seller *seller) {
 		for (int i = 1; i <= n; ++i) {
 			auto c = new Customer();
 			c->id          = seller->type + std::to_string(seller->id);
+			c->seller = "H";
 			c->arrivalTime = rand() % 60;
 			c->serviceTime = rand() % 2 + 1;
 			array.push_back(c);
@@ -24,6 +25,7 @@ void generate_customers(int n, Seller *seller) {
 		for (int i = 1; i <= n; ++i) {
 			auto c         = new Customer();
 			c->id          = seller->type + std::to_string(seller->id);
+            c->seller = "M";
 			c->arrivalTime = rand() % 60;
 			c->serviceTime = rand() % 3 + 2;
 			array.push_back(c);
@@ -34,6 +36,7 @@ void generate_customers(int n, Seller *seller) {
 		for (int i = 1; i <= n; ++i) {
 			auto c = new Customer();
 			c->id          = seller->type + std::to_string(seller->id);
+            c->seller = "L";
 			c->arrivalTime = rand() % 60;
 			c->serviceTime = rand() % 4 + 4;
 			array.push_back(c);
