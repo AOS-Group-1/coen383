@@ -8,12 +8,11 @@ class Seller;
 class Customer {
 public:
 	std::string id;
-    std::string seller;
 	int         arrivalTime    = 0;
 	int         serviceTime    = 0;
 	int         responseTime   = -1;
 	int         turnaroundTime = -1;
-	int         waitingTime    = -1;
+	int         waitingTime    = 0;
 	
 };
 

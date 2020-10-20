@@ -16,14 +16,14 @@ public:
 	
 	Seller(char type, int id);
 	
-	void customerArrives(Customer *customer);
+	void customerArrives(Customer *customer, int time);
 	
 	// print events that happen during the time slice
 	void timeSlice(int time);
 
 private:
 	
-	bool findSeat(Customer *customer);
+	bool findSeat(Customer *customer) const;
 	
 };
 

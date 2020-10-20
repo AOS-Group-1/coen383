@@ -14,8 +14,8 @@ private:
 	// Private Constructor so that no objects can be created
 	Concert();
 	
-	Seat            *seats[10][10];
-	pthread_mutex_t locks[10][10];
+	Seat            *seats[10][10]{};
+	pthread_mutex_t locks[10][10]{};
 
 public:
 	

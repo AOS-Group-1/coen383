@@ -13,13 +13,12 @@ std::string printTime(int time) {
 	return "0:" + print;
 }
 
-void Seller::customerArrives(Customer *customer) {
-	std::cout << printTime(customer->arrivalTime) << " - "
-	          << customer->id << " arrived" << std::endl;
+void Seller::customerArrives(Customer *customer, int time) {
+	std::cout << printTime(time) << " - " << customer->id << " arrived" << std::endl;
 	customerQueue.push(customer);
 }
 
-bool Seller::findSeat(Customer *customer) {
+bool Seller::findSeat(Customer *customer) const {
 	switch (this->type) {
 		case 'H': {
 			int       order[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
@@ -47,18 +46,23 @@ void Seller::timeSlice(int time) {
 	if (customerQueue.empty()) return;
 	Customer *customer = customerQueue.front();
 	if (customer->responseTime == -1 && customer->turnaroundTime == -1) {
-		customer->responseTime = time - customer->arrivalTime;
-		if (time <= 60 && findSeat(customer)) {
+		customer->responseTime = time;
+		if (time < 60 && findSeat(customer)) {
 			std::cout << printTime(time) << " - " << customer->id << " served" << std::endl;
 			customer->turnaroundTime = time + customer->serviceTime - 1;
 		} else {
 			std::cout << printTime(time) << " - " << customer->id << " rejected" << std::endl;
+			customer->responseTime -= customer->arrivalTime;
+			customer->turnaroundTime = 0;
 			customerQueue.pop();
 			return;
 		}
 	}
 	if (time >= customer->turnaroundTime) {
 		std::cout << printTime(time) << " - " << customer->id << " completed" << std::endl;
+		customer->responseTime -= customer->arrivalTime;
+		customer->turnaroundTime = time - customer->arrivalTime;
+		customer->waitingTime    = customer->turnaroundTime - customer->responseTime;
 		customerQueue.pop();
 	}
 }
