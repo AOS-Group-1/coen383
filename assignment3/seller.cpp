@@ -62,7 +62,6 @@ void Seller::timeSlice(int time) {
 		std::cout << printTime(time) << " - " << customer->id << " completed" << std::endl;
 		customer->responseTime -= customer->arrivalTime;
 		customer->turnaroundTime = time - customer->arrivalTime;
-		customer->waitingTime    = customer->turnaroundTime - customer->responseTime;
 		customerQueue.pop();
 	}
 }

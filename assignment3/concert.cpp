@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cmath>
 #include "concert.h"
 
 Concert *Concert::instance = nullptr;
@@ -37,7 +38,9 @@ void Concert::printStats(int n, int time) {
 	int   accepted_H = 0, accepted_M = 0, accepted_L = 0;
 	float art_H      = 0, art_M = 0, art_L = 0;
 	float att_H      = 0, att_M = 0, att_L = 0;
-	float awt_H      = 0, awt_M = 0, awt_L = 0;
+	int   min_time_H = 1000, max_time_H = 0;
+	int   min_time_M = 1000, max_time_M = 0;
+	int   min_time_L = 1000, max_time_L = 0;
 	
 	for (auto &seat : seats) {
 		for (auto &s : seat) {
@@ -47,19 +50,25 @@ void Concert::printStats(int n, int time) {
 						accepted_H++;
 						art_H += (float) s->customer->responseTime;
 						att_H += (float) s->customer->turnaroundTime;
-						awt_H += (float) s->customer->waitingTime;
+						min_time_H = (int) fmin(min_time_H, s->customer->arrivalTime);
+						max_time_H = (int) fmax(max_time_H, s->customer->arrivalTime +
+						                                    s->customer->turnaroundTime);
 						break;
 					case 'M':
 						accepted_M++;
 						art_M += (float) s->customer->responseTime;
 						att_M += (float) s->customer->turnaroundTime;
-						awt_M += (float) s->customer->waitingTime;
+						min_time_M = (int) fmin(min_time_M, s->customer->arrivalTime);
+						max_time_M = (int) fmax(max_time_M, s->customer->arrivalTime +
+						                                    s->customer->turnaroundTime);
 						break;
 					case 'L':
 						accepted_L++;
 						art_L += (float) s->customer->responseTime;
 						att_L += (float) s->customer->turnaroundTime;
-						awt_L += (float) s->customer->waitingTime;
+						min_time_L = (int) fmin(min_time_L, s->customer->arrivalTime);
+						max_time_L = (int) fmax(max_time_L, s->customer->arrivalTime +
+						                                    s->customer->turnaroundTime);
 						break;
 					default:
 						std::cout << "ERROR" << std::endl;
@@ -71,35 +80,37 @@ void Concert::printStats(int n, int time) {
 	printf(
 		"*******************************************************************************************\n");
 	printf(
-		"| Sellers | # Accepted | # Rejected | Average RT | Average TT | Average WT | Throughput |\n");
+		"| Sellers | # Accepted | # Rejected | Average RT | Average TT | Throughput |\n");
 	printf(
 		"*******************************************************************************************\n");
-	printf("    H           %d           %d         %.2f         %.2f         %.2f         %.2f \n",
+	printf("    H           %d           %d         %.2f         %.2f         %.2f \n",
 	       accepted_H, n - accepted_H,
-	       art_H / (float) accepted_H, att_H / (float) accepted_H, awt_H / (float) accepted_H,
-	       (float) accepted_H / (float) time);
-	printf("    M           %d           %d         %.2f         %.2f         %.2f         %.2f \n",
+	       art_H / (float) accepted_H, att_H / (float) accepted_H,
+	       (float) accepted_H / (float) (max_time_H - min_time_H));
+	printf("    M           %d           %d         %.2f         %.2f         %.2f \n",
 	       accepted_M, (3 * n) - accepted_M,
-	       art_M / (float) accepted_M, att_M / (float) accepted_M, awt_M / (float) accepted_H,
-	       (float) accepted_M / (float) time);
-	printf("    L           %d           %d         %.2f         %.2f         %.2f         %.2f \n",
+	       art_M / (float) accepted_M, att_M / (float) accepted_M,
+	       (float) accepted_M / (float) (max_time_M - min_time_M) / 3);
+	printf("    L           %d           %d         %.2f         %.2f         %.2f \n",
 	       accepted_L, (6 * n) - accepted_L,
-	       art_L / (float) accepted_L, att_L / (float) accepted_L, awt_L / (float) accepted_L,
-	       (float) accepted_L / (float) time);
+	       art_L / (float) accepted_L, att_L / (float) accepted_L,
+	       (float) accepted_L / (float) (max_time_L - min_time_L) / 6);
 	printf(
 		"*******************************************************************************************\n");
 }
 
 bool Concert::allocateSeat(Customer *customer, int row) {
 	for (int i = 0; i < 10; i++) {
-		if (!seats[row][i]->assigned) {
-			if (pthread_mutex_trylock(&locks[row][i]) == 0) {
+		if (pthread_mutex_trylock(&locks[row][i]) == 0) {
+			/* CRITICAL REGION */
+			if (!seats[row][i]->assigned) {
 				seats[row][i]->customer = customer;
 				seats[row][i]->assigned = true;
 				pthread_mutex_unlock(&locks[row][i]);
-//				printSeats();
+				printSeats();
 				return true;
 			}
+			/* CRITICAL REGION */
 		}
 	}
 	return false;

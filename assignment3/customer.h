@@ -12,7 +12,6 @@ public:
 	int         serviceTime    = 0;
 	int         responseTime   = -1;
 	int         turnaroundTime = -1;
-	int         waitingTime    = 0;
 	
 };
 

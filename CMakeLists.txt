@@ -44,5 +44,6 @@ add_executable(assignment3
         assignment3/customer.h
         assignment3/customer.cpp)
 target_link_libraries(assignment3 pthread)
+target_link_libraries(assignment3 m)
 
 project(coen383)
