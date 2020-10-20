@@ -81,22 +81,24 @@ int main(int argc, char **argv) {
 	
 	seller_type = 'M';
 	for (int i = 1; i < 4; i++) {
-		auto s = new Seller{seller_type, i};
+		auto s = new Seller{seller_type, i-1};
 		generate_customers(n, s->eventQueue, seller_type);
 		pthread_create(&tids[i], nullptr, (void *(*)(void *)) sell, s);
 	}
 	
 	seller_type = 'L';
 	for (int i = 4; i < 10; i++) {
-		auto s = new Seller{seller_type, i};
+		auto s = new Seller{seller_type, i-4};
 		generate_customers(n, s->eventQueue, seller_type);
 		pthread_create(&tids[i], nullptr, (void *(*)(void *)) sell, s);
 	}
-	usleep(10000);
+	sleep(1);
 	// wakeup all seller threads
 	for (current_time = 0; current_time < TIME_LIMIT; current_time++) {
-		usleep(10000);
+		sleep(1);
 		wakeup_all_seller_threads();
+        sleep(1);
+		Concert::getInstance()->printSeats();
 	}
 	
 	// wait for all seller threads to exit

@@ -2,10 +2,13 @@
 #define ASSIGNMENT3_CONCERT_H
 
 #include "customer.h"
+#include "seller.h"
+class Seller;
 
 typedef struct {
+    std::string seller;
     bool assigned;
-    Customer *customer;
+    Customer customer;
 } Seat;
 
 class Concert {
@@ -34,7 +37,7 @@ public:
     }
 
     // returns false if could not set seat
-    bool allocateSeat(Customer &customer, int row);
+    bool allocateSeat(Customer &customer, Seller *seller, int row);
 
     void printSeats();
 

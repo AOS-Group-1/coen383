@@ -5,6 +5,8 @@
 #include "customer.h"
 #include "concert.h"
 
+class Concert;
+
 class Seller {
 public:
 	
@@ -26,7 +28,7 @@ private:
 	
 	std::queue<Customer> customerQueue;
 	
-	bool findSeat(Customer &customer);
+	bool findSeat(Customer &customer, Seller *seller);
 	
 };
 
