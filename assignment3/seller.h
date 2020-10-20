@@ -12,6 +12,7 @@ public:
 	int  id;
 	
 	std::queue<Customer *> eventQueue;
+	std::queue<Customer *> customerQueue;
 	
 	Seller(char type, int id);
 	
@@ -21,8 +22,6 @@ public:
 	void timeSlice(int time);
 
 private:
-	
-	std::queue<Customer *> customerQueue;
 	
 	bool findSeat(Customer *customer);
 	

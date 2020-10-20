@@ -42,7 +42,7 @@ bool Concert::allocateSeat(Customer *customer, int row) {
 				seats[row][i]->customer = customer;
 				seats[row][i]->assigned = true;
 				pthread_mutex_unlock(&locks[row][i]);
-				//printSeats();
+//				printSeats();
 				return true;
 			}
 		}

@@ -48,7 +48,7 @@ void Seller::timeSlice(int time) {
 	Customer *customer = customerQueue.front();
 	if (customer->responseTime == -1 && customer->turnaroundTime == -1) {
 		customer->responseTime = time;
-		if (findSeat(customer)) {
+		if (time <= 60 && findSeat(customer)) {
 			std::cout << printTime(time) << " - " << customer->id << " served" << std::endl;
 			customer->turnaroundTime = time + customer->serviceTime - 1;
 		} else {

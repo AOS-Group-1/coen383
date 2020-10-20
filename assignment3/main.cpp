@@ -17,21 +17,19 @@ int             currentTime = 0;
 void *sell(Seller *seller) {
 	
 	// while loops sells ticket while time has not reached TIME_LIMIT (60) minutes
-	while (currentTime < TIME_LIMIT) {
+	while (currentTime < TIME_LIMIT * 2) {
 		pthread_mutex_lock(&mutex);
 		pthread_cond_wait(&cond, &mutex);
-		cout << "ID: " << seller->type << seller->id << " | time: " << currentTime << endl;
-		if (currentTime == 52) {
+//		cout << "ID: " << seller->type << seller->id << " | time: " << currentTime << endl;
 		
-		}
 		// Serve any buyer available in this seller queue that is ready
 		// now to buy ticket till done with all relevant buyers in their queue
-		if (seller->eventQueue.empty()) {
+		if (seller->eventQueue.empty() && seller->customerQueue.empty()) {
 			pthread_mutex_unlock(&mutex);
 			return nullptr;
 		}
 		
-		if (seller->eventQueue.front()->arrivalTime <= currentTime) {
+		if (!seller->eventQueue.empty() && seller->eventQueue.front()->arrivalTime <= currentTime) {
 			seller->customerArrives(seller->eventQueue.front());
 			seller->eventQueue.pop();
 		}
@@ -53,8 +51,8 @@ int main(int argc, char **argv) {
 	int seed = time(nullptr);
 //	srand(seed);
 	
-	// N : Customers to server
-	int n = 10;
+	// N : Customers to serve
+	int n = 5;
 	if (argc > 1) {
 		n = atoi(argv[1]);
 	}
@@ -81,7 +79,7 @@ int main(int argc, char **argv) {
 	}
 	
 	seller_type = 'L';
-	for (int i = 4; i < 10; i++) {
+	for (int i = 1; i < 7; i++) {
 		auto s = new Seller{seller_type, i};
 		generate_customers(n, s);
 		pthread_create(&tids[i], nullptr, (void *(*)(void *)) sell, s);
@@ -89,7 +87,7 @@ int main(int argc, char **argv) {
 	
 	usleep(10000);
 	// wakeup all seller threads
-	for (currentTime = 0; currentTime < TIME_LIMIT; currentTime++) {
+	for (currentTime = 0; currentTime < TIME_LIMIT * 2; currentTime++) {
 		usleep(10000);
 		wakeup_all_seller_threads();
 	}
@@ -97,9 +95,10 @@ int main(int argc, char **argv) {
 	// wait for all seller threads to exit
 	for (auto &tid : tids)
 		pthread_join(tid, nullptr);
-	
+
 //	customer->responseTime -= customer->arrivalTime;
 //	customer->turnaroundTime = time - customer->arrivalTime;
+	Concert::getInstance()->printSeats();
 	// TODO: Printout simulation results
 	exit(0);
 }
