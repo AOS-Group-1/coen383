@@ -92,6 +92,9 @@ int main(int argc, char **argv) {
 	// wait for all seller threads to exit
 	for (auto &tid : tids)
 		pthread_join(tid, nullptr);
+
+//	customer->responseTime -= customer->arrivalTime;
+//	customer->turnaroundTime = time - customer->arrivalTime;
 	
 	// TODO: Printout simulation results
 	exit(0);
