@@ -1,20 +1,30 @@
 #ifndef ASSIGNMENT4_PAGE_H
 #define ASSIGNMENT4_PAGE_H
 
-#include "job.h"
+#include <list>
 
 class Job;
 
 class Page {
 public:
 	
+	static std::list<Page *> pages;
+	static std::list<Page *> freePages;
+	
 	Job  *job      = nullptr;
 	Page *nextPage = nullptr;
 	Page *prevPage = nullptr;
 	
-	bool allocated = false;
+	bool allocated     = false;
+	int  memorySection = -1;
 	
-	int memorySection = -1;
+	float lastUsed = 0;
+	
+	/**
+	 * Generates count pages, placed in freePages as well
+	 * @param count
+	 */
+	static void generatePages(int count);
 	
 };
 

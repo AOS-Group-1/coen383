@@ -1,8 +1,7 @@
-#include <utility>
-#include <vector>
 #include <algorithm>
-#include <iostream>
 #include "job.h"
+
+std::vector<Job *> Job::jobs = {};
 
 Job::Job(std::string id) {
 	name = std::move(id);
@@ -16,10 +15,10 @@ bool cmp(Job *a, Job *b) {
 	return a->arrivalTime < b->arrivalTime;
 }
 
-std::vector<Job *> Job::generateJobs() {
-	std::vector<Job *> jobs;
+void Job::generateJobs(int count) {
+	jobs = {};
 	
-	for (int i = 0; i < 150; ++i) {
+	for (int i = 0; i < count; ++i) {
 		std::string id;
 		id.push_back('A' + (i / 26));
 		id.push_back('A' + (i % 26));
@@ -27,5 +26,12 @@ std::vector<Job *> Job::generateJobs() {
 	}
 	
 	std::sort(jobs.begin(), jobs.end(), cmp);
-	return jobs;
+}
+
+void Job::startJob() {
+
+}
+
+void Job::loop(Page *(*getPage)()) {
+
 }

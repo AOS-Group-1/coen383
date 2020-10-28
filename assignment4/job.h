@@ -2,11 +2,13 @@
 #define ASSIGNMENT4_JOB_H
 
 #include <string>
-#include <list>
+#include <vector>
 #include "page.h"
 
 class Job {
 public:
+	
+	static std::vector<Job *> jobs;
 	
 	std::string name;
 	int         pageSize;
@@ -17,7 +19,11 @@ public:
 	
 	explicit Job(std::string id);
 	
-	static std::vector<Job *> generateJobs();
+	/**
+	 * generates count jobs, sorted by arrival time
+	 * @param count
+	 */
+	static void generateJobs(int count);
 	
 	/**
 	 * Allocate first page
@@ -26,14 +32,14 @@ public:
 	void startJob();
 	
 	/**
+	 * Called every .1 sec
+	 */
+	void loop(Page *(*getPage)());
+	
+	/**
 	 * Calculates next memory section that will be accessed
 	 */
 	int getNextMemory();
-	
-	/**
-	 * Gets next page section, called every .1 sec
-	 */
-	void loop();
 	
 };
 

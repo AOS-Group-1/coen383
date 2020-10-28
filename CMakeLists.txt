@@ -48,6 +48,20 @@ set(CMAKE_CXX_STANDARD 11)
 
 project(assignment4)
 add_executable(assignment4
-        assignment4/main.cpp assignment4/job.cpp assignment4/job.h assignment4/page.cpp assignment4/page.h)
+        assignment4/main.cpp
+        assignment4/job.cpp
+        assignment4/job.h
+        assignment4/page.cpp
+        assignment4/page.h
+        assignment4/algorithms/FIFO.h
+        assignment4/algorithms/FIFO.cpp
+        assignment4/algorithms/LRU.h
+        assignment4/algorithms/LRU.cpp
+        assignment4/algorithms/LFU.h
+        assignment4/algorithms/LFU.cpp
+        assignment4/algorithms/MFU.h
+        assignment4/algorithms/MFU.cpp
+        assignment4/algorithms/random.h
+        assignment4/algorithms/random.cpp)
 
 project(coen383)

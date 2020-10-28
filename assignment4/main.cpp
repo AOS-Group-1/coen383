@@ -1,32 +1,31 @@
-#include <vector>
-#include <list>
 #include "job.h"
+#include "algorithms/FIFO.h"
+#include "algorithms/LRU.h"
+#include "algorithms/LFU.h"
+#include "algorithms/MFU.h"
+#include "algorithms/random.h"
 
-std::vector<Job *> jobs;
-std::list<Page *>  pages;
-std::list<Page *>  freePages;
-
-int main(int argc, char *argv[]) {
-	for (auto job : Job::generateJobs()) {
-		jobs.push_back(job);
-	}
-	
-	for (int  i = 0; i < 100; ++i) {
-		pages.push_back(new Page());
-	}
-	for (auto page : pages) {
-		freePages.push_back(page);
-	}
+void run(Page *(*getPage)()) {
+	Job::generateJobs(150);
+	Page::generatePages(100);
 	
 	for (int i = 0; i < 600; ++i) {
 		float     time = (float) i / 10;
-		for (auto job : jobs) {
+		for (auto job : Job::jobs) {
 			if ((float) job->arrivalTime <= time) {
 				job->startJob();
 			}
-			job->loop();
+			job->loop(getPage);
 		}
 	}
+}
+
+int main(int argc, char *argv[]) {
+	run(FIFO::getPage);
+	run(LRU::getPage);
+	run(LFU::getPage);
+	run(MFU::getPage);
+	run(Random::getPage);
 	
 	return 0;
 }
