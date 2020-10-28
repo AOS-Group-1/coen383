@@ -6,7 +6,5 @@
 
 ## Run
 
-* mkdir cmake-build-debug
-* cd cmake-build-debug
-* cmake ..
-* make
+* chmod 777 run.sh
+* ./run.sh

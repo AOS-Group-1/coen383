@@ -33,17 +33,21 @@ set(CMAKE_CXX_STANDARD 11)
 #
 #project(assignment2_hpf)
 #add_executable(assignment2_hpf assignment2/hpf.c)
+#
+#project(assignment3)
+#add_executable(assignment3
+#        assignment3/main.cpp
+#        assignment3/concert.h
+#        assignment3/concert.cpp
+#        assignment3/seller.h
+#        assignment3/seller.cpp
+#        assignment3/customer.h
+#        assignment3/customer.cpp assignment4/main.cpp)
+#target_link_libraries(assignment3 pthread)
+#target_link_libraries(assignment3 m)
 
-project(assignment3)
-add_executable(assignment3
-        assignment3/main.cpp
-        assignment3/concert.h
-        assignment3/concert.cpp
-        assignment3/seller.h
-        assignment3/seller.cpp
-        assignment3/customer.h
-        assignment3/customer.cpp)
-target_link_libraries(assignment3 pthread)
-target_link_libraries(assignment3 m)
+project(assignment4)
+add_executable(assignment4
+        assignment4/main.cpp assignment4/job.cpp assignment4/job.h assignment4/page.cpp assignment4/page.h)
 
 project(coen383)
