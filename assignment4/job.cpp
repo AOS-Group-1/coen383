@@ -39,7 +39,6 @@ void Job::startJob(float time) {
 	pages->lastUsed      = time;
 	started = true;
 	// TODO: print enter
-//	printf("");
 }
 
 void Job::loop(Page *(*getPage)(), float time) {
@@ -55,15 +54,16 @@ void Job::loop(Page *(*getPage)(), float time) {
 			page->allocated     = false;
 			page->memorySection = -1;
 			page->lastUsed      = time;
+			Page::freePages.push_back(page);
 			nextPage = nextPage->nextPage;
 		}
 		// TODO: print exit
 		return;
 	}
 	
-	int  newMem       = getNextMemory();
+	int  newMem            = getNextMemory();
 	// check for hits
-	Page *nextPage    = pages;
+	Page *nextPage         = pages;
 	while (nextPage != nullptr) {
 		if (nextPage->memorySection == newMem) {
 			// TODO: hit
@@ -86,12 +86,13 @@ void Job::loop(Page *(*getPage)(), float time) {
 		newPage->nextPage->prevPage = newPage->prevPage;
 	}
 	// TODO: print page change
-	newPage->nextPage = pages;
-	pages->prevPage   = newPage;
+	newPage->job           = this;
+	newPage->nextPage      = pages;
+	newPage->allocated     = true;
+	newPage->memorySection = newMem;
+	newPage->lastUsed      = time;
+	pages->prevPage        = newPage;
 	pages = newPage;
-	pages->job           = this;
-	pages->memorySection = newMem;
-	pages->lastUsed      = time;
 }
 
 // Access with job->getNextMemory()
