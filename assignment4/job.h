@@ -17,6 +17,8 @@ public:
 	bool        started  = false;
 	bool        finished = false;
 	
+	float endTime;
+	
 	Page *pages = nullptr;
 	
 	explicit Job(std::string id);
