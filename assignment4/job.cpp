@@ -28,10 +28,18 @@ void Job::generateJobs(int count) {
 	std::sort(jobs.begin(), jobs.end(), cmp);
 }
 
-void Job::startJob() {
-
+void Job::startJob(float time) {
+	if (started || (float) arrivalTime > time || Page::freePages.size() < 4) return;
+	pages = Page::freePages.front();
+	Page::freePages.pop_front();
+	started = true;
 }
 
-void Job::loop(Page *(*getPage)()) {
+void Job::loop(Page *(*getPage)(), float time) {
+	if (!started && !finished) return;
+	
+}
 
+int Job::getNextMemory() {
+	return 0;
 }

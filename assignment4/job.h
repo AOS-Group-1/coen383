@@ -14,6 +14,8 @@ public:
 	int         pageSize;
 	int         arrivalTime;
 	int         serviceDuration;
+	bool        started  = false;
+	bool        finished = false;
 	
 	Page *pages = nullptr;
 	
@@ -29,12 +31,12 @@ public:
 	 * Allocate first page
 	 *
 	 */
-	void startJob();
+	void startJob(float time);
 	
 	/**
 	 * Called every .1 sec
 	 */
-	void loop(Page *(*getPage)());
+	void loop(Page *(*getPage)(), float time);
 	
 	/**
 	 * Calculates next memory section that will be accessed

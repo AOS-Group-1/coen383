@@ -12,10 +12,8 @@ void run(Page *(*getPage)()) {
 	for (int i = 0; i < 600; ++i) {
 		float     time = (float) i / 10;
 		for (auto job : Job::jobs) {
-			if ((float) job->arrivalTime <= time) {
-				job->startJob();
-			}
-			job->loop(getPage);
+			job->startJob();
+			job->loop(getPage, time);
 		}
 	}
 }
