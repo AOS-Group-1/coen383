@@ -92,6 +92,17 @@ void Job::loop(Page *(*getPage)(), float time) {
 	pages->lastUsed      = time;
 }
 
+// Access with job->getNextMemory()
 int Job::getNextMemory() {
-	return 0;
+    int r = rand() % 10;
+    int i = NULL;
+    if(r <= 0  && r < 7){
+        // Spacial Locality 70% case
+        i = rand() % 3 - 1; // -1, 0, 1
+    }
+    else if(r <= 7  && r <= 9){
+        i = rand() % (this->pageSize - 3) + 2; // 2, 3, 4, ... pagesize - 3
+    }
+    // Handle wraparound with index to current or last accessed page
+    return i;
 }
