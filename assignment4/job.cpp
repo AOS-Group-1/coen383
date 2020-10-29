@@ -103,6 +103,7 @@ int Job::getNextMemory() {
     else if(r <= 7  && r <= 9){
         i = rand() % (this->pageSize - 3) + 2; // 2, 3, 4, ... pagesize - 3
     }
+
     // Handle wraparound with index to current or last accessed page
     return i;
 }

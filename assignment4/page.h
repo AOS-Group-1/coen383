@@ -19,6 +19,8 @@ public:
 	int  memorySection = -1;
 	
 	float lastUsed = 0;
+
+	int n_ref = 0; // Number of times this page was referenced
 	
 	/**
 	 * Generates count pages, placed in freePages as well
