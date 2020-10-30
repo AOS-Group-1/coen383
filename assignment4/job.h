@@ -18,6 +18,7 @@ public:
 	bool        finished = false;
 	
 	float endTime;
+	int lastRef;
 	
 	Page *pages = nullptr;
 	
@@ -41,9 +42,11 @@ public:
 	void loop(Page *(*getPage)(), float time);
 	
 	/**
-	 * Calculates next memory section that will be accessed
+	 * Calculates next memory section that will be accessed into lastRef
 	 */
-	int getNextMemory();
+	void getNextMemory();
+	
+	void addPage(Page *page);
 	
 };
 
