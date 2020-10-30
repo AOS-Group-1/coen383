@@ -46,8 +46,6 @@ public:
 	 */
 	void getNextMemory();
 	
-	void addPage(Page *page);
-	
 };
 
 #endif //ASSIGNMENT4_JOB_H

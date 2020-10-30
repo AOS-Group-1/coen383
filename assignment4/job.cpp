@@ -34,11 +34,7 @@ void Job::startJob(float time) {
 	lastRef = 0;
 	pages   = Page::freePages.front();
 	Page::freePages.pop_front();
-	pages->job           = nullptr;
-	pages->allocated     = true;
-	pages->memorySection = 0;
-	pages->lastUsed      = time;
-	pages->n_ref         = 0;
+	pages->allocate(this, time);
 	started = true;
 	// TODO: print enter
 }
@@ -47,16 +43,11 @@ void Job::loop(Page *(*getPage)(), float time) {
 	if (!started || finished) return;
 	if (endTime <= time) {
 		finished = true;
-		Page *nextPage = pages;
-		while (nextPage != nullptr) {
-			Page *page = nextPage;
-			page->job           = nullptr;
-			page->nextPage      = nullptr;
-			page->prevPage      = nullptr;
-			page->allocated     = false;
-			page->memorySection = -1;
-			Page::freePages.push_back(page);
-			nextPage = nextPage->nextPage;
+		Page *page = pages;
+		while (page != nullptr) {
+			Page *nextPage = page->nextPage;
+			nextPage->free();
+			page = nextPage;
 		}
 		// TODO: print exit
 		return;
@@ -64,12 +55,11 @@ void Job::loop(Page *(*getPage)(), float time) {
 	
 	getNextMemory();
 	// check for hits
-	Page *nextPage         = pages;
+	Page *nextPage = pages;
 	while (nextPage != nullptr) {
 		if (nextPage->memorySection == lastRef) {
 			// TODO: hit
-			nextPage->lastUsed = time;
-			nextPage->n_ref++;
+			nextPage->reference(time);
 			return;
 		}
 		nextPage = nextPage->nextPage;
@@ -84,13 +74,12 @@ void Job::loop(Page *(*getPage)(), float time) {
 	} else {
 		// get from all pages
 		newPage = getPage();
+		// remove reference for other job
 		newPage->prevPage->nextPage = newPage->nextPage;
 		newPage->nextPage->prevPage = newPage->prevPage;
 	}
 	// TODO: print page change
-	newPage->lastUsed      = time;
-	newPage->n_ref         = 0;
-	addPage(newPage);
+	newPage->allocate(this, time, lastRef);
 }
 
 // Access with job->getNextMemory()
@@ -106,13 +95,4 @@ void Job::getNextMemory() {
 	}
 	// Handle wraparound with index to current or last accessed page
 	lastRef = (lastRef + i) % pageSize;
-}
-
-void Job::addPage(Page *page) {
-	page->job       = this;
-	page->allocated = true;
-	page->memorySection = lastRef;
-	page->nextPage  = pages;
-	pages->prevPage = page;
-	pages = page;
 }
