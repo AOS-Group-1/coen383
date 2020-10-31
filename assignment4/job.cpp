@@ -44,7 +44,7 @@ void Job::startJob(float time) {
 	started = true;
 	successes++;
 	// print enter
-	printf("%.1f,\t%s,\tenter,\t%i,\t%i\n", time, name.c_str(), pageSize, serviceDuration);
+	printf("%.1f,\t%s,\tenter,\t\t%i,\t\t%i\n", time, name.c_str(), pageSize, serviceDuration);
 }
 
 void Job::loop(Page *(*getPage)(), float time) {
@@ -56,7 +56,7 @@ void Job::loop(Page *(*getPage)(), float time) {
 		}
 		pages.clear();
 		// print exit
-		printf("%.1f,\t%s,\texit,\t%i,\t%i\n", time, name.c_str(), pageSize, serviceDuration);
+		printf("%.1f,\t%s,\texit,\t\t%i,\t\t%i\n", time, name.c_str(), pageSize, serviceDuration);
 		return;
 	}
 	
@@ -84,7 +84,7 @@ void Job::loop(Page *(*getPage)(), float time) {
 		// get from all pages
 		newPage = getPage();
 		// print page change from allocated
-		printf("%.1f,\t%s,\ttrue,\t%s,\t%i\n",
+		printf("%.1f,\t%s,\ttrue,\t\t%s,\t\t%i\n",
 		       time, name.c_str(), newPage->job->name.c_str(), newPage->memorySection);
 	}
 	newPage->allocate(this, time, lastRef);
