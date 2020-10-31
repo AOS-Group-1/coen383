@@ -19,11 +19,11 @@ void run(Page *(*getPage)()) {
 }
 
 int main(int argc, char *argv[]) {
-	run(FIFO::getPage);
+//	run(FIFO::getPage);
 	run(LRU::getPage);
-	run(LFU::getPage);
-	run(MFU::getPage);
-	run(Random::getPage);
+//	run(LFU::getPage);
+//	run(MFU::getPage);
+//	run(Random::getPage);
 	
 	return 0;
 }

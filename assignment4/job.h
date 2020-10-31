@@ -17,12 +17,12 @@ public:
 	bool        started  = false;
 	bool        finished = false;
 	
-	float endTime;
-	int lastRef;
+	float endTime = 0;
+	int   lastRef = 0;
 	
 	Page *pages = nullptr;
 	
-	explicit Job(std::string id);
+	explicit Job();
 	
 	/**
 	 * generates count jobs, sorted by arrival time

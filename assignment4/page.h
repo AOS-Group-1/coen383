@@ -31,7 +31,7 @@ public:
 	
 	void reference(float time);
 	
-	void free();
+	void clear();
 	
 };
 

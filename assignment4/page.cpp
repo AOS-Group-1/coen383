@@ -24,6 +24,7 @@ void Page::allocate(Job *pJob, float time, int memory) {
 	n_ref         = 0;
 	
 	nextPage = job->pages;
+	if (nextPage != nullptr) nextPage->prevPage = this;
 	prevPage = nullptr;
 	job->pages = this;
 }
@@ -33,7 +34,7 @@ void Page::reference(float time) {
 	n_ref++;
 }
 
-void Page::free() {
+void Page::clear() {
 	job           = nullptr;
 	nextPage      = nullptr;
 	prevPage      = nullptr;
