@@ -43,16 +43,16 @@ void runMultiple(Page *(*getPage)(), int count) {
 }
 
 int main(int argc, char *argv[]) {
-	std::cout << "FIFO" << std::endl;
-	runMultiple(FIFO::getPage, 5);
+//	std::cout << "FIFO" << std::endl;
+//	runMultiple(FIFO::getPage, 5);
 	std::cout << "LRU" << std::endl;
 	runMultiple(LRU::getPage, 5);
-	std::cout << "LFU" << std::endl;
-	runMultiple(LFU::getPage, 5);
-	std::cout << "MFU" << std::endl;
-	runMultiple(MFU::getPage, 5);
-	std::cout << "Random" << std::endl;
-	runMultiple(Random::getPage, 5);
+//	std::cout << "LFU" << std::endl;
+//	runMultiple(LFU::getPage, 5);
+//	std::cout << "MFU" << std::endl;
+//	runMultiple(MFU::getPage, 5);
+//	std::cout << "Random" << std::endl;
+//	runMultiple(Random::getPage, 5);
 	
 	return 0;
 }

@@ -21,6 +21,12 @@ void Page::memoryMap() {
 }
 
 void Page::allocate(Job *pJob, float time, int memory) {
+	if (allocated) {
+		// remove reference for previous job
+		if (prevPage != nullptr) prevPage->nextPage = nextPage;
+		if (nextPage != nullptr) nextPage->prevPage = prevPage;
+	}
+	
 	job           = pJob;
 	memorySection = memory;
 	allocated     = true;

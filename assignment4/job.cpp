@@ -67,13 +67,16 @@ void Job::loop(Page *(*getPage)(), float time) {
 	// check for hits
 	Page *nextPage = pages;
 	while (nextPage != nullptr) {
-		// hit
 		if (nextPage->memorySection == lastRef) {
+			// hit
 			nextPage->reference(time);
 			hits++;
 			return;
 		}
 		nextPage = nextPage->nextPage;
+		if (nextPage == pages) {
+			break;
+		}
 	}
 	// miss
 	misses++;
@@ -88,9 +91,6 @@ void Job::loop(Page *(*getPage)(), float time) {
 	} else {
 		// get from all pages
 		newPage = getPage();
-		// remove reference for other job
-		if (newPage->prevPage != nullptr) newPage->prevPage->nextPage = newPage->nextPage;
-		if (newPage->nextPage != nullptr) newPage->nextPage->prevPage = newPage->prevPage;
 		// print page change from allocated
 		printf("%.1f,\t%s,\ttrue,\t%s,\t%i\n",
 		       time, name.c_str(), newPage->job->name.c_str(), newPage->memorySection);

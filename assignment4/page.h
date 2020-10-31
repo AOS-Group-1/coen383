@@ -29,7 +29,7 @@ public:
 	
 	static void memoryMap();
 	
-	void allocate(Job *pJob, float time,int memory=0);
+	void allocate(Job *pJob, float time, int memory = 0);
 	
 	void reference(float time);
 	
