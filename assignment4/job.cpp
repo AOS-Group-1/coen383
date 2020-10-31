@@ -3,6 +3,10 @@
 
 std::vector<Job *> Job::jobs = {};
 
+int Job::hits      = 0;
+int Job::misses    = 0;
+int Job::successes = 0;
+
 Job::Job() {
 	std::vector<int> pageSizes{5, 11, 17, 31};
 	pageSize        = pageSizes.at(rand() % pageSizes.size());
@@ -38,6 +42,7 @@ void Job::startJob(float time) {
 	Page::freePages.front()->allocate(this, time);
 	Page::freePages.pop_front();
 	started = true;
+	successes++;
 	// print enter
 	printf("%.1f,\t%s,\tenter,\t%i,\t%i\n", time, name.c_str(), pageSize, serviceDuration);
 }
@@ -46,13 +51,13 @@ void Job::loop(Page *(*getPage)(), float time) {
 	if (!started || finished) return;
 	if (endTime <= time) {
 		finished = true;
-		Page      *page = pages;
+		Page *page = pages;
 		while (page != nullptr) {
 			Page *nextPage = page->nextPage;
 			page->clear();
 			page = nextPage;
 		}
-		pages = nullptr;
+		pages      = nullptr;
 		// print exit
 		printf("%.1f,\t%s,\texit,\t%i,\t%i\n", time, name.c_str(), pageSize, serviceDuration);
 		return;
@@ -65,11 +70,13 @@ void Job::loop(Page *(*getPage)(), float time) {
 		// hit
 		if (nextPage->memorySection == lastRef) {
 			nextPage->reference(time);
+			hits++;
 			return;
 		}
 		nextPage = nextPage->nextPage;
 	}
 	// miss
+	misses++;
 	
 	Page *newPage;
 	// get from free pages if there are any

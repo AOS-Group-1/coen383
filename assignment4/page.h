@@ -27,6 +27,8 @@ public:
 	 */
 	static void generatePages(int count);
 	
+	static void memoryMap();
+	
 	void allocate(Job *pJob, float time,int memory=0);
 	
 	void reference(float time);

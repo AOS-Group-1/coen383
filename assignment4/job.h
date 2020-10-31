@@ -10,6 +10,10 @@ public:
 	
 	static std::vector<Job *> jobs;
 	
+	static int hits;
+	static int misses;
+	static int successes;
+	
 	std::string name;
 	int         pageSize;
 	int         arrivalTime;

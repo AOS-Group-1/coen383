@@ -16,6 +16,10 @@ void Page::generatePages(int count) {
 	}
 }
 
+void Page::memoryMap() {
+
+}
+
 void Page::allocate(Job *pJob, float time, int memory) {
 	job           = pJob;
 	memorySection = memory;
