@@ -12,8 +12,6 @@ public:
 	static std::list<Page *> freePages;
 	
 	Job  *job          = nullptr;
-	Page *nextPage     = nullptr;
-	Page *prevPage     = nullptr;
 	int  memorySection = -1;
 	bool allocated     = false;
 	
@@ -33,7 +31,7 @@ public:
 	
 	void reference(float time);
 	
-	void clear();
+	void free();
 	
 };
 

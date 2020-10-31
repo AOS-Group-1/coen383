@@ -24,7 +24,7 @@ public:
 	float endTime = 0;
 	int   lastRef = 0;
 	
-	Page *pages = nullptr;
+	std::list<Page *> pages = {};
 	
 	explicit Job();
 	

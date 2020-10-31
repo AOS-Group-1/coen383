@@ -23,8 +23,7 @@ void Page::memoryMap() {
 void Page::allocate(Job *pJob, float time, int memory) {
 	if (allocated) {
 		// remove reference for previous job
-		if (prevPage != nullptr) prevPage->nextPage = nextPage;
-		if (nextPage != nullptr) nextPage->prevPage = prevPage;
+		job->pages.remove(this);
 	}
 	
 	job           = pJob;
@@ -32,11 +31,7 @@ void Page::allocate(Job *pJob, float time, int memory) {
 	allocated     = true;
 	lastUsed      = time;
 	n_ref         = 0;
-	
-	nextPage = job->pages;
-	if (nextPage != nullptr) nextPage->prevPage = this;
-	prevPage = nullptr;
-	job->pages = this;
+	job->pages.push_back(this);
 }
 
 void Page::reference(float time) {
@@ -44,10 +39,8 @@ void Page::reference(float time) {
 	n_ref++;
 }
 
-void Page::clear() {
+void Page::free() {
 	job           = nullptr;
-	nextPage      = nullptr;
-	prevPage      = nullptr;
 	memorySection = -1;
 	allocated     = false;
 	freePages.push_back(this);

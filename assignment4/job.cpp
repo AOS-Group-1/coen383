@@ -51,13 +51,10 @@ void Job::loop(Page *(*getPage)(), float time) {
 	if (!started || finished) return;
 	if (endTime <= time) {
 		finished = true;
-		Page *page = pages;
-		while (page != nullptr) {
-			Page *nextPage = page->nextPage;
-			page->clear();
-			page = nextPage;
+		for (auto page : pages) {
+			page->free();
 		}
-		pages      = nullptr;
+		pages.clear();
 		// print exit
 		printf("%.1f,\t%s,\texit,\t%i,\t%i\n", time, name.c_str(), pageSize, serviceDuration);
 		return;
@@ -65,17 +62,12 @@ void Job::loop(Page *(*getPage)(), float time) {
 	
 	getNextMemory();
 	// check for hits
-	Page *nextPage = pages;
-	while (nextPage != nullptr) {
-		if (nextPage->memorySection == lastRef) {
+	for (auto page : pages) {
+		if (page->memorySection == lastRef) {
 			// hit
-			nextPage->reference(time);
+			page->reference(time);
 			hits++;
 			return;
-		}
-		nextPage = nextPage->nextPage;
-		if (nextPage == pages) {
-			break;
 		}
 	}
 	// miss
