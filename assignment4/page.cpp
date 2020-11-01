@@ -29,6 +29,7 @@ void Page::allocate(Job *pJob, float time, int memory) {
 	job           = pJob;
 	memorySection = memory;
 	allocated     = true;
+	firstUsed	  = time;
 	lastUsed      = time;
 	n_ref         = 0;
 	job->pages.push_back(this);

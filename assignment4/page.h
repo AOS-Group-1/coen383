@@ -14,7 +14,7 @@ public:
 	Job  *job          = nullptr;
 	int  memorySection = -1;
 	bool allocated     = false;
-	
+	float firstUsed = 0;
 	float lastUsed = 0;
 	
 	int n_ref = 0; // Number of times this page was referenced
