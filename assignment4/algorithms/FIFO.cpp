@@ -1,5 +1,7 @@
 #include "FIFO.h"
 
 Page *FIFO::getPage() {
-	return nullptr;
+	Page *evict = nullptr;
+	evict = Page::pages.front();
+	return evict;
 }
