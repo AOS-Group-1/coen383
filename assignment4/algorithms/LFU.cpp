@@ -1,7 +1,7 @@
 #include "LFU.h"
 
 Page *LFU::getPage() {
-	int  min    = 0;
+	int  min    = __INT_MAX__;
 	Page *evict = nullptr;
 	
 	for (auto p : Page::pages) {
