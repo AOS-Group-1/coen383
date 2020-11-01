@@ -17,7 +17,13 @@ void Page::generatePages(int count) {
 }
 
 void Page::memoryMap() {
-
+	for (auto page : Page::pages) {
+		if (page->job != nullptr)
+			printf("%s", page->job->name.c_str());
+		else
+			printf("..");
+	}
+	printf("\n");
 }
 
 void Page::allocate(Job *pJob, float time, int memory) {
@@ -29,15 +35,19 @@ void Page::allocate(Job *pJob, float time, int memory) {
 	job           = pJob;
 	memorySection = memory;
 	allocated     = true;
-	firstUsed	  = time;
+	firstUsed     = time;
 	lastUsed      = time;
 	n_ref         = 0;
 	job->pages.push_back(this);
+	pages.remove(this);
+	pages.push_back(this);
 }
 
 void Page::reference(float time) {
 	lastUsed = time;
 	n_ref++;
+	pages.remove(this);
+	pages.push_back(this);
 }
 
 void Page::free() {
