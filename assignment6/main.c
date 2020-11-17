@@ -94,12 +94,6 @@ void readPipes(int **pipes) {
     fclose(outputFile);
 }
 
-/* periodically writes to the write pipe
- * @param pipe
- *      a reference to an int[2], which represents the read and write pipes
- * @param childNum
- *      which child the process that is running this function is
- */
 void writePipe(int *pipe, int childNum) {
     time_t startTime;
     int sleepVal;
@@ -127,10 +121,6 @@ void writePipe(int *pipe, int childNum) {
     close(pipe[WRITE_PIPE]);
 }
 
-/* takes input from the user on stdin and writes it to its write pipe
- * @param pipe
- *      a reference to an int[2], which represents the read and write pipes
- */
 void fifthChild(int *pipe) {
     ssize_t input;
     time_t startTime = time(0);
